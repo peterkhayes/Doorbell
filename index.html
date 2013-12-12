@@ -3,11 +3,19 @@
   <link rel = "stylesheet" href = "style.css" />
 </head>
 <body>
-  <img class = "doorbell" src = "./images/doorbell.png"></img>
-  <form>
-    <input type = "text" placeholder = "Email"></input>
-    <input type = "text" placeholder = "Name"></input>
-  </form>
+  <div class = "container">
+    <div class = "images">
+      <div class = "doorbell notrung icon"></div>
+      <div class = "doorbell rung hide icon"></div>
+      <div class = "whosthere icon"></div>
+      <div class = "leave icon hide"></div>
+    </div>
+    <h2 id = "message"></h2>
+    <form>
+      <input type = "text" class = "email" placeholder = "Email"></input>
+      <input type = "text" class = "name" placeholder = "Name"></input>
+    </form>
+  </div>
   <script src = "http://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src = "index.js"></script>
 

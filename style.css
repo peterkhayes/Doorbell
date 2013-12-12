@@ -1,3 +1,7 @@
-img.doorbell {
-  height: 50px;
+div.doorbell {
+
+}
+
+.hide {
+  display: none;
 }
