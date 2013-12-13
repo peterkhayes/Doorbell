@@ -1,5 +1,6 @@
 var express = require('express');
 var http = require('http');
+var httpGet = require('http-get');
 var path = require('path');
 var nodemailer = require("nodemailer");
 var keys = require('./keys');
@@ -27,6 +28,10 @@ var checkAndWipe = function() {
   }
 };
 
+// Get the weather outside of Hack Reactor.
+var weather = function() {
+  
+};
 
 // create reusable transport method (opens pool of SMTP connections)
 var emailSender = nodemailer.createTransport("SMTP",{
