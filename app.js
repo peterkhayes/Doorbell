@@ -85,7 +85,7 @@ app.post('/ring', function(req, res) {
   // Req.body is an email and a name.
   console.log(req.body);
   // If the user provided a name and an email...
-  if (req.body && req.body.email && req.body.name) {
+  if (req.body && req.body.contact && req.body.name) {
 
     var contact = escaper(req.body.contact);
     var name = escaper(req.body.name);
