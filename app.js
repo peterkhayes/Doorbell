@@ -36,6 +36,7 @@ var temperature;
 var getTemperature = function() {
   var url = 'http://api.wunderground.com/api/'+keys.weather+'/conditions/q/CA/San_Francisco.json';
   http.get(url, function(data){
+    console.log("weather data:", data);
     temperature = data.temp_f;
   }).on('error', function(err) {
     console.log("Error getting weather:", err);
@@ -172,22 +173,15 @@ app.post('/unring', function(req, res) {
   // If the user provided a name and an email...
   if (req.body && req.body.contact && req.body.name) {
 
+    var contact = escaper(req.body.contact);
     var name = escaper(req.body.name);
-    // Send out emails to everyone currently present, other than our current user.
-    for (var presentUser in usersPresent) {
-      if (req.contact === presentUser.contact) continue; // Don't send an email to yourself.
-      var msgData = {name: name, recipient: presentUser.email};
-      console.log("Sent email with this data:", emailData);
-      // emailSender.sendMail(emailTemplates.unring(emailData), function(error, response){
-      //   if(error){
-      //       console.log(error);
-      //   } else{
-      //       console.log("Message sent: " + response.message);
-      //   }
-      // });
-    }
+
+    // Send out messages to everyone currently present.
+    messageAllUsers({action: 'ring', name: name});
+
     res.writeHead(200);
     res.end();
+
   // Otherwise error.
   } else {
     res.writeHead(400);
