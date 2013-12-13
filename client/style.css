@@ -4,19 +4,19 @@
   height: auto;
 }
 
-.images .icon.rung {
+.rung {
   background-color: red;
 }
 
-.images .icon.notrung {
+.notrung {
   background-color: green;
 }
 
-.immages .icon.whosthere {
+.whosthere {
   background-color: blue;
 }
 
-.images .icon.leave {
+.leave {
   background-color: black;
 }
 
