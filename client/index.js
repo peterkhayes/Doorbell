@@ -15,18 +15,18 @@ $(document).ready(function(){
       var $form = $('form');
 
       //escaping is happening on the server. Come at me bro --Peter Hayes
-      var email = $form.find('.email').val();
+      var contact = $form.find('.contact').val();
       var name  = $form.find('.name').val();
 
-      doorbell.data = {email: email, name: name};
 
-      //email must satisfy basic regex, and name must be 2 letters or longer
-      if (doorbell.checkEmail(email) && name.length - 1){
-        console.log('name and email OK');
+      //contact must satisfy basic regex, and name must be 2 letters or longer
+      var contact = doorbell.checkContactInfo(contact);
+      if (contact && name.length - 1){
+        doorbell.data = {contact: contact, name: name};
         doorbell.rung = true;
-        doorbell.ring(email, name);
+        doorbell.ring(contact, name);
       } else {
-        console.log('name and email not ok...')
+        console.log('name and contact not ok...')
         doorbell.$message.text('Knock knock, who\'s there?');
       }
     } else {
@@ -55,12 +55,16 @@ $(document).ready(function(){
   };
 
 
-  doorbell.checkEmail = function(email){
-    if ( email.match(/.+\@.+\..+/) ){
-      return true;
+  doorbell.checkContactInfo = function(contact){
+    if ( contact && contact.match(/.+\@.+\..+/) ){
+      return contact;
     } else {
-      return false;
+      contact = contact.replace(/[^\d]*/g, '', 'g');
+      if (contact.length > 9){
+         return contact;
+      }
     }
+    return false;
   };
 
   doorbell.leave = function(){
@@ -77,8 +81,8 @@ $(document).ready(function(){
     })
   }
 
-  doorbell.ring = function(email, name){
-    var data = {email: email, name: name};
+  doorbell.ring = function(contact, name){
+    var data = {contact: contact, name: name};
     $.ajax({
       method: "POST", 
       url: '/ring',
@@ -98,7 +102,7 @@ $(document).ready(function(){
 
     //Hide the form
     $('form').addClass('hide');
-    doorbell.$message.text('Email sent, cancel doorbell if you get in');
+    doorbell.$message.text('contact sent, cancel doorbell if you get in');
   };
 
   doorbell.failure = function(){
