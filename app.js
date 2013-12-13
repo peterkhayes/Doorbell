@@ -3,12 +3,14 @@ var http = require('http');
 var path = require('path');
 var nodemailer = require("nodemailer");
 var keys = require('./keys');
+var escaper = require('jsesc');
 
 var app = express();
 app.set('port', process.env.PORT || 3000);
 app.use(express.favicon());
 
 app.use(express.static(path.join(__dirname, '/client')));
+app.use(express.bodyParser());
 
 // List of users currently inside.
 // Key: email.  Val: name.
@@ -28,7 +30,7 @@ var emailTemplates = {
     return {
       from: "Door <hackreactordoorbell@gmail.com>",
       to: fields.recipient,
-      subject: fields.user + " is at the door!",
+      subject: fields.name + " is at the door!",
       text: "It's currently " + (30 + ~~(Math.random()*30)) + " degrees outside."
     };
   },
@@ -36,7 +38,7 @@ var emailTemplates = {
     return {
       from: "Door <hackreactordoorbell@gmail.com>",
       to: fields.recipient,
-      subject: fields.user + " found their way inside safely.",
+      subject: fields.name + " found their way inside safely.",
       text: "And it's no thanks to you."
     };
   }
@@ -57,10 +59,12 @@ app.post('/ring', function(req, res) {
 
   // If the user provided a name and an email...
   if (req.body && req.body.email && req.body.name) {
-    console.log
+
+    var email = escaper(req.body.email);
+    var name = escaper(req.body.name);
     // Send out emails to everyone currently present.
     for (var presentUser in usersPresent) {
-      var emailData = {user: req.email, recipient: presentUser.email};
+      var emailData = {name: name, recipient: presentUser.email};
       console.log("Sent email with this data:", emailData);
       // emailSender.sendMail(emailTemplates.ring(emailData), function(error, response){
       //   if(error){
@@ -72,7 +76,7 @@ app.post('/ring', function(req, res) {
     }
 
     // Then log in the current user.
-    usersPresent[req.body.email] = req.body.name;
+    usersPresent[email] = name;
     res.send(200);
   // Otherwise error.
   } else {
@@ -86,10 +90,12 @@ app.post('/unring', function(req, res) {
 
   // If the user provided a name and an email...
   if (req.body && req.body.email && req.body.name) {
+
+    var name = escaper(req.body.name);
     // Send out emails to everyone currently present, other than our current user.
     for (var presentUser in usersPresent) {
       if (req.email === presentUser.email) continue; // Don't send an email to yourself.
-      var emailData = {user: req.email, recipient: presentUser.email};
+      var emailData = {name: name, recipient: presentUser.email};
       console.log("Sent email with this data:", emailData);
       // emailSender.sendMail(emailTemplates.unring(emailData), function(error, response){
       //   if(error){
