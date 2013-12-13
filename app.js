@@ -1,6 +1,5 @@
 var express = require('express');
 var http = require('http');
-var httpGet = require('http-get');
 var path = require('path');
 var nodemailer = require("nodemailer");
 var keys = require('./keys');
@@ -27,11 +26,24 @@ var checkAndWipe = function() {
     usersPresent = {};
   }
 };
+// Periodically wipe the server.
+setInterval(checkAndWipe, 3600000);
 
+
+var temperature;
 // Get the weather outside of Hack Reactor.
-var weather = function() {
-  
+var getTemperature = function() {
+  var url = 'http://api.wunderground.com/api/'+keys.weather+'/conditions/q/CA/San_Francisco.json';
+  http.get(url, function(data){
+    temperature = data.temp_f;
+  }).on('error', function(err) {
+    console.log("Error getting weather:", err);
+  });
 };
+// Current temperature outside of Hack Reactor.
+// Periodically update the weather.
+getTemperature();
+setInterval(getTemperature, 1800000);
 
 // create reusable transport method (opens pool of SMTP connections)
 var emailSender = nodemailer.createTransport("SMTP",{
@@ -77,7 +89,7 @@ var templates = {
   ring: function(data) {
     return {
       subject: data.name + " is at the door!",
-      text: "It's currently " + (30 + ~~(Math.random()*30)) + " degrees outside."
+      text: "It's currently " + temperature + " degrees outside."
     };
   },
   unring: function(data) {
@@ -167,5 +179,3 @@ app.listen(app.get('port'), function() {
   );
 });
 
-// Periodically wipe the server.
-setInterval(checkAndWipe, 3600000);
