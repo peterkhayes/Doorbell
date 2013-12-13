@@ -132,13 +132,16 @@ $(document).ready(function(){
       url:    '/whosthere',
       contentType: 'application/JSON',
       success: function(data){
+        data = JSON.parse(data);
         if (!data.length){
           doorbell.$message.text('Nobody is signed in');
         } else {
           var message = '<ul>'
-          data.forEach(function(name){
-            message+= '<li>' + name + '</li>';
-          });
+          for (var i = 0; i < data.length; i++){
+            message+='<li>' + data[i] + '</li>';
+          }
+          message+='<ul>';
+          doorbell.$message.html(message);
         }
       },
       error: function(){ doorbell.failure() }
