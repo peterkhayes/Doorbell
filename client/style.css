@@ -23,8 +23,3 @@
 .hide {
   display: none;
 }
-
-@font-face {
-  font-family: "Entypo";
-  src: url('') format("truetype");
-}
