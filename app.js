@@ -57,13 +57,13 @@ var sendMessage = function(type, action, data) {
   }
 };
 
-var messageAllUsers = function(action) {
+var messageAllUsers = function(data) {
   for (var userContact in usersPresent) {
-    var msgData = {name: name, recipient: presentUser.contact};
+    var msgData = {name: data.name, recipient: presentUser.contact};
     if (isPhoneNumber(userContact)) {
-      sendMessage('text', action, msgData);
+      sendMessage('text', data.action, msgData);
     } else {
-      sendMessage('email', action, msgData);
+      sendMessage('email', data.action, msgData);
     }
   }
 };
@@ -103,7 +103,7 @@ app.post('/ring', function(req, res) {
     var name = escaper(req.body.name);
 
     // Send out messages to everyone currently present.
-    messageAllUsers('ring');
+    messageAllUsers({action: 'ring', name: name});
 
 
     // Then log in the current user.
