@@ -62,8 +62,14 @@ var isPhoneNumber = function(input) {
 var sendMessage = function(type, action, data) {
   var message = templates[action](data);
   if (type === 'email') {
-    console.log("Emailing",message,"to",data.contact);
-    emailSender.sendMail(emailTemplates.ring(msgData), function(error, response){
+    console.log("Emailing",message,"to",data.recipient);
+    var options = {
+      from: "Door <hackreactordoorbell@gmail.com>",
+      to: data.recipient,
+      subject: message.subject,
+      text: message.text
+    };
+    emailSender.sendMail(options, function(error, response){
       if(error){
           console.log(error);
       } else{
@@ -71,11 +77,11 @@ var sendMessage = function(type, action, data) {
       }
     });
   } else if (type === 'text') {
-    console.log("Texting",message,"to",data.contact);
+    console.log("Texting",message,"to",data.recipient);
 
     var params = querystring.stringify({
       from: '4157671437',
-      to: data.contact,
+      to: data.recipient,
       body: message.subject + ' ' + message.text
     });
 
