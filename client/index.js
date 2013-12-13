@@ -12,18 +12,21 @@ $(document).ready(function(){
   //     Registering click events      //
   $('.notrung').on('click', function(){
     if (!doorbell.rung){
-      doorbell.rung = true;
       var $form = $('form');
-      var email = $form.find('.email').text();
-      var name  = $form.find('.name').text();
+
+      //escaping is happening on the server. Come at me bro --Peter Hayes
+      var email = $form.find('.email').val();
+      var name  = $form.find('.name').val();
 
       doorbell.data = JSON.stringify({email: email, name: name});
 
       //email must satisfy basic regex, and name must be 2 letters or longer
       if (doorbell.checkEmail(email) && name.length - 1){
+        console.log('name and email OK');
+        doorbell.rung = true;
         doorbell.ring(email, name);
-      }
-      else {
+      } else {
+        console.log('name and email not ok...')
         doorbell.$message.text('Knock knock, who\'s there?');
       }
     } else {
