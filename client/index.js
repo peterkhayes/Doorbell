@@ -5,9 +5,12 @@ $(document).ready(function(){
     $('.notrung').click();
   });
 
+
+
   var doorbell = {};
   doorbell.data = {};
   doorbell.$message= $('#message');
+
 
   //     Registering click events      //
   $('.notrung').on('click', function(){
@@ -34,10 +37,6 @@ $(document).ready(function(){
     }
   });
 
-  $('.whosthere').on('click', function(){
-    doorbell.$message.text('');
-    doorbell.whosthere();
-  });
 
   $('.rung').on('click', function(){
     doorbell.cancel();
@@ -124,7 +123,8 @@ $(document).ready(function(){
       error: function(){
         doorbell.failure();
       }
-    })
+    });
+    doorbell.default();
   }
 
   doorbell.whosthere = function(){
@@ -135,19 +135,28 @@ $(document).ready(function(){
       success: function(data){
         data = JSON.parse(data);
         if (!data.length){
-          doorbell.$message.text('Nobody is signed in');
+          $('#people').html("<h3>People Here</h3>NOBODY");
         } else {
-          var message = '<ul>'
+          var message = '<h3>People Here</h3><ul>'
           for (var i = 0; i < data.length; i++){
             message+='<li>' + data[i] + '</li>';
           }
           message+='<ul>';
-          doorbell.$message.html(message);
+          $('#people').html(message);
+
+          //checks again a minute in the future
+          setTimeout(doorbell.whosthere, 60000);
         }
       },
-      error: function(){ doorbell.failure() }
+      error: function(){ 
+        setTimeout(function(){
+          doorbell.whosthere();
+      }, 5000)}
     });
   }
+
+  //Populates list of peeps
+  doorbell.whosthere();
 });
 
 // / - website
