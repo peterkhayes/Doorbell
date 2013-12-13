@@ -52,6 +52,7 @@ $(document).ready(function(){
    $('.rung').addClass('hide');
    $('.whosthere').removeClass('hide');
    $('.leave').addClass('hide');
+   doorbell.rung = false;
   };
 
 
