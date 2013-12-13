@@ -1,7 +1,12 @@
+.images {
+  text-align: center;
+}
+
 .images .icon {
-  width: 100px;
-  height: 100px;
-  height: auto;
+  display: inline-block;
+  width: 150px;
+  height: 150px;
+  margin: 20px;
 }
 
 .rung {
@@ -20,6 +25,27 @@
   background-color: black;
 }
 
-.hide {
+.icon.hide {
   display: none;
+}
+
+form {
+  text-align: center;
+}
+
+input {
+  display: block;
+  width: 80%;
+  margin: 15px auto;
+  font-size: 16px;
+  padding: 5px;
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+}
+
+p {
+  text-align: center;
 }
