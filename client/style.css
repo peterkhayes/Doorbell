@@ -9,24 +9,12 @@
   margin: 20px;
 }
 
-.rung {
-  background-color: red;
-}
-
-.notrung {
-  background-color: green;
-}
-
-.whosthere {
-  background-color: blue;
-}
-
-.leave {
-  background-color: black;
-}
-
 .icon.hide {
   display: none;
+}
+
+.icon {
+  cursor: pointer;
 }
 
 form {
@@ -48,4 +36,36 @@ h1 {
 
 p {
   text-align: center;
+}
+
+@media (max-width: 800px){
+  .images .icon {
+    width: 100px;
+    height: 100px;
+    margin: 15px;
+  }
+}
+
+@media (max-width: 440px){
+  .images .icon {
+    width: 70px;
+    height: 70px;
+    margin: 10px;
+  }
+}
+
+/*@media (max-width: 410px){
+  .images .icon {
+    width: 80px;
+    height: 80px;
+    margin: 10px;
+  }
+}*/
+
+@media (max-width: 370px){
+  .images .icon {
+    width: 60px;
+    height: 60px;
+    margin: 8px;
+  }
 }
