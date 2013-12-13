@@ -48,7 +48,7 @@ $(document).ready(function(){
   });
 
   doorbell.default = function(){
-   $('.unrung').removeClass('hide');
+   $('.notrung').removeClass('hide');
    $('.rung').addClass('hide');
    $('.whosthere').removeClass('hide');
    $('.leave').addClass('hide');
