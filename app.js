@@ -25,19 +25,46 @@ var emailSender = nodemailer.createTransport("SMTP",{
     }
 });
 
-var emailTemplates = {
-  ring: function(fields) {
+var isPhoneNumber = function(input) {
+  return (/^\d+$/).test(input);
+};
+
+var sendMessage = function(type, action, data) {
+  var message = templates[action](data);
+  if (type === 'email') {
+    console.log("Emailing",message,"to",data.contact);
+    // emailSender.sendMail(emailTemplates.ring(msgData), function(error, response){
+    //   if(error){
+    //       console.log(error);
+    //   } else{
+    //       console.log("Message sent: " + response.message);
+    //   }
+    // });
+  } else if (type === 'text') {
+    console.log("Texting",message,"to",data.contact);
+  }
+};
+
+var messageAllUsers = function(action) {
+  for (var userContact in usersPresent) {
+    var msgData = {name: name, recipient: presentUser.contact};
+    if (isPhoneNumber(userContact)) {
+      sendMessage('text', action, msgData);
+    } else {
+      sendMessage('email', action, msgData);
+    }
+  }
+};
+
+var templates = {
+  ring: function(data) {
     return {
-      from: "Door <hackreactordoorbell@gmail.com>",
-      to: fields.recipient,
-      subject: fields.name + " is at the door!",
+      subject: data.name + " is at the door!",
       text: "It's currently " + (30 + ~~(Math.random()*30)) + " degrees outside."
     };
   },
-  unring: function(fields) {
+  unring: function(data) {
     return {
-      from: "Door <hackreactordoorbell@gmail.com>",
-      to: fields.recipient,
       subject: fields.name + " found their way inside safely.",
       text: "And it's no thanks to you."
     };
@@ -46,8 +73,8 @@ var emailTemplates = {
 
 app.get('/whosthere', function(req, res) {
   var data = [];
-  for (var email in usersPresent) {
-    data.push(usersPresent[key]);
+  for (var contact in usersPresent) {
+    data.push(usersPresent[contact]);
   }
   console.log("users here:", data);
   data = JSON.stringify(data);
@@ -60,23 +87,15 @@ app.post('/ring', function(req, res) {
   // If the user provided a name and an email...
   if (req.body && req.body.email && req.body.name) {
 
-    var email = escaper(req.body.email);
+    var contact = escaper(req.body.contact);
     var name = escaper(req.body.name);
-    // Send out emails to everyone currently present.
-    for (var presentUser in usersPresent) {
-      var emailData = {name: name, recipient: presentUser.email};
-      console.log("Sent email with this data:", emailData);
-      // emailSender.sendMail(emailTemplates.ring(emailData), function(error, response){
-      //   if(error){
-      //       console.log(error);
-      //   } else{
-      //       console.log("Message sent: " + response.message);
-      //   }
-      // });
-    }
+
+    // Send out messages to everyone currently present.
+    messageAllUsers('ring');
+
 
     // Then log in the current user.
-    usersPresent[email] = name;
+    usersPresent[contact] = name;
     res.writeHead(200);
     res.end();
   // Otherwise error.
@@ -91,13 +110,13 @@ app.post('/unring', function(req, res) {
   // Req.body is an email and a name.
 
   // If the user provided a name and an email...
-  if (req.body && req.body.email && req.body.name) {
+  if (req.body && req.body.contact && req.body.name) {
 
     var name = escaper(req.body.name);
     // Send out emails to everyone currently present, other than our current user.
     for (var presentUser in usersPresent) {
-      if (req.email === presentUser.email) continue; // Don't send an email to yourself.
-      var emailData = {name: name, recipient: presentUser.email};
+      if (req.contact === presentUser.contact) continue; // Don't send an email to yourself.
+      var msgData = {name: name, recipient: presentUser.email};
       console.log("Sent email with this data:", emailData);
       // emailSender.sendMail(emailTemplates.unring(emailData), function(error, response){
       //   if(error){
@@ -124,7 +143,7 @@ app.post('/leave', function(req, res) {
 });
 
 // Start server
-http.createServer(app).listen(app.get('port'), function() {
+app.listen(app.get('port'), function() {
   console.log(
     'Express server listening on port ' + app.get('port'),
     '\nPress Ctrl+C to shutdown'
