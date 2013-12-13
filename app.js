@@ -59,7 +59,7 @@ var sendMessage = function(type, action, data) {
 
 var messageAllUsers = function(data) {
   for (var userContact in usersPresent) {
-    var msgData = {name: data.name, recipient: presentUser.contact};
+    var msgData = {name: data.name, recipient: userContact};
     if (isPhoneNumber(userContact)) {
       sendMessage('text', data.action, msgData);
     } else {
