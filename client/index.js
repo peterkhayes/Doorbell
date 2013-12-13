@@ -124,7 +124,8 @@ $(document).ready(function(){
       error: function(){
         doorbell.failure();
       }
-    })
+    });
+    doorbell.default();
   }
 
   doorbell.whosthere = function(){
