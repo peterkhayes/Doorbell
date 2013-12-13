@@ -4,8 +4,9 @@ $(document).ready(function(){
   });
 
   var doorbell = {};
+  doorbell.$message= $('#message');
 
-  $('.doorbell ring').one('click', function(){
+  $('.notrung').one('click', function(){
     if (!doorbell.rung){
       doorbell.rung = true;
       var $form = $('form');
@@ -17,10 +18,10 @@ $(document).ready(function(){
         doorbell.ring(email, name);
       }
       else {
-        $('#message').text('Knock knock, who\'s there?');
+        doorbell.$message.text('Knock knock, who\'s there?');
       }
     } else {
-      $('#message').text('Hold your horses, one click is good');
+      doorbell.$message.text('Hold your horses, one click is good');
     }
   });
 
@@ -39,8 +40,8 @@ $(document).ready(function(){
       method: "POST", 
       url: '/ring',
       data: data,
-      success: doorbell.success,
-      error: doorbell.failure
+      success: function(){ doorbell.success(); },
+      error: function(){ doorbell.failure(); }
     })
   };
 
@@ -52,12 +53,31 @@ $(document).ready(function(){
     //who haven't come to the door
     $images.find('.whosthere').removeClass('hide');
     $('form').addClass('hide');
-    $('#message').text('Email sent, cancel doorbell if you get in');
+    doorbell.$message.text('Email sent, cancel doorbell if you get in');
   }
 
   doorbell.failure = function(){
-    $('#message').text('Shoot, something went wrong. Try again in a sec');
+    doorbell.$message.text('Shoot, something went wrong. Try again in a sec');
     doorbell.rung = false;
+  }
+
+  doorbell.whosthere = function(){
+    $.ajax({
+      method: 'GET', 
+      url:    '/whosthere',
+      contentType: 'application/JSON',
+      success: function(data){
+        if (!data.length){
+          doorbell.$message.text('Nobody is signed in');
+        } else {
+          var message = '<ul>'
+          data.forEach(function(name){
+            message+= '<li>' + name + '</li>';
+          });
+        }
+      },
+      error: function(){ doorbell.failure() }
+    });
   }
 });
 

@@ -1,7 +1,30 @@
-div.doorbell {
+.images .icon {
+  width: 100px;
+  height: 100px;
+  height: auto;
+}
 
+.images .icon.rung {
+  background-color: red;
+}
+
+.images .icon.notrung {
+  background-color: green;
+}
+
+.immages .icon.whosthere {
+  background-color: blue;
+}
+
+.images .icon.leave {
+  background-color: black;
 }
 
 .hide {
   display: none;
+}
+
+@font-face {
+  font-family: "Entypo";
+  src: url('') format("truetype");
 }
