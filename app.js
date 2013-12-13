@@ -51,12 +51,13 @@ app.get('/whosthere', function(req, res) {
   }
   console.log("users here:", data);
   res.writeHead(200);
+  data = JSON.stringify(data);
   res.send(data);
 });
 
 app.post('/ring', function(req, res) {
   // Req.body is an email and a name.
-
+  console.log(req.body);
   // If the user provided a name and an email...
   if (req.body && req.body.email && req.body.name) {
 
@@ -77,10 +78,12 @@ app.post('/ring', function(req, res) {
 
     // Then log in the current user.
     usersPresent[email] = name;
-    res.send(200);
+    res.writeHead(200);
+    res.end();
   // Otherwise error.
   } else {
-    res.send(400);
+    res.writeHead(400);
+    res.end();
   }
 
 });
@@ -105,17 +108,20 @@ app.post('/unring', function(req, res) {
       //   }
       // });
     }
-    res.send(200);
+    res.writeHead(200);
+    res.end();
   // Otherwise error.
   } else {
-    res.send(400);
+    res.writeHead(400);
+    res.end();
   }
 });
 
 app.post('/leave', function(req, res) {
   delete usersPresent[req.email];
   console.log("users:", usersPresent);
-  res.send(200);
+  res.writeHead(200);
+  res.end();
 });
 
 // Start server

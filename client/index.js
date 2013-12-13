@@ -18,7 +18,7 @@ $(document).ready(function(){
       var email = $form.find('.email').val();
       var name  = $form.find('.name').val();
 
-      doorbell.data = JSON.stringify({email: email, name: name});
+      doorbell.data = {email: email, name: name};
 
       //email must satisfy basic regex, and name must be 2 letters or longer
       if (doorbell.checkEmail(email) && name.length - 1){
@@ -79,7 +79,6 @@ $(document).ready(function(){
 
   doorbell.ring = function(email, name){
     var data = {email: email, name: name};
-    data = JSON.stringify(data);
     $.ajax({
       method: "POST", 
       url: '/ring',
