@@ -1,0 +1,25 @@
+.images .icon {
+  width: 100px;
+  height: 100px;
+  height: auto;
+}
+
+.rung {
+  background-color: red;
+}
+
+.notrung {
+  background-color: green;
+}
+
+.whosthere {
+  background-color: blue;
+}
+
+.leave {
+  background-color: black;
+}
+
+.hide {
+  display: none;
+}
