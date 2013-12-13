@@ -4,6 +4,7 @@ var path = require('path');
 var nodemailer = require("nodemailer");
 var keys = require('./keys');
 var escaper = require('jsesc');
+var querystring = require('querystring');
 
 var app = express();
 app.set('port', process.env.PORT || 3000);
@@ -62,15 +63,39 @@ var sendMessage = function(type, action, data) {
   var message = templates[action](data);
   if (type === 'email') {
     console.log("Emailing",message,"to",data.contact);
-    // emailSender.sendMail(emailTemplates.ring(msgData), function(error, response){
-    //   if(error){
-    //       console.log(error);
-    //   } else{
-    //       console.log("Message sent: " + response.message);
-    //   }
-    // });
+    emailSender.sendMail(emailTemplates.ring(msgData), function(error, response){
+      if(error){
+          console.log(error);
+      } else{
+          console.log("Message sent: " + response.message);
+      }
+    });
   } else if (type === 'text') {
     console.log("Texting",message,"to",data.contact);
+
+    var params = querystring.stringify({
+      from: '4157671437',
+      to: data.contact,
+      body: message.subject + ' ' + message.text
+    });
+
+    var options = {
+      hostname: 'https://api.twilio.com/',
+      path: '/2010-04-01/Accounts/'+keys.twilio+'/Messages',
+      method: 'POST'
+    };
+
+    var req = http.request(options, function(res) {
+      console.log("Set text message!");
+    });
+
+    req.on('error', function(e) {
+      console.log('problem with request: ' + e.message);
+    });
+
+    // write data to request body
+    req.write(params);
+    req.end();
   }
 };
 
