@@ -35,9 +35,9 @@ var temperature;
 // Get the weather outside of Hack Reactor.
 var getTemperature = function() {
   var url = 'http://api.wunderground.com/api/'+keys.weather+'/conditions/q/CA/San_Francisco.json';
-  http.get(url, function(data){
-    console.log("weather data:", data);
-    temperature = data.temp_f;
+  http.get(url, function(res){
+    console.log("weather data:", res.body);
+    temperature = res.body.temp_f;
   }).on('error', function(err) {
     console.log("Error getting weather:", err);
   });
