@@ -104,6 +104,7 @@ $(document).ready(function(){
   doorbell.failure = function(){
     doorbell.$message.text('Shoot, something went wrong. Try again in a sec');
     doorbell.rung = false;
+    doorbell.default();
   };
 
   doorbell.cancel = function(){

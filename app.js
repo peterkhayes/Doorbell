@@ -50,7 +50,6 @@ app.get('/whosthere', function(req, res) {
     data.push(usersPresent[key]);
   }
   console.log("users here:", data);
-  res.writeHead(200);
   data = JSON.stringify(data);
   res.send(data);
 });
