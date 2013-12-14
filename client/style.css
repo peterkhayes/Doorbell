@@ -1,37 +1,31 @@
-* {
+body {
   font-family: 'futura' helvetica sans-serif;
-}
-
-.images {
   text-align: center;
+  padding: 0 10%;
 }
 
-.images div {
+.icon {
   display: inline-block;
-  height: 200px;
+  background-color: #FAFAFA;
+  border: 1px solid #F0F0F0;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px;
 }
 
-.images img { 
+.icon img { 
   display: block;
   width: 150px;
   height: 150px;
-  margin: 20px;
-}
-
-img {
-  cursor: pointer;
 }
 
 label {
-  display: inline;
-  background-color: #BBB;
   padding-top: 2px;
   padding-bottom: 2px;
   padding-left: 5px;
   padding-right: 5px;
-  border-radius: 10px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
 
   margin: auto;
   text-align: center;
@@ -41,57 +35,50 @@ label {
   display: none;
 }
 
-
-form {
-  text-align: center;
-}
-
 input {
   display: block;
-  width: 80%;
+  width: 100%;
   margin: 15px auto;
   font-size: 16px;
   padding: 5px;
   text-align: center;
 }
 
-h1 {
-  text-align: center;
-}
 
 ul {
   list-style-type: none;
-  padding: 0px;
-  margin: 0px;
-}
-
-p {
-  text-align: center;
+  padding: 0;
+  margin: 0;
 }
 
 
 
 /*    Media Queries      */
 @media (max-width: 800px){
-  .images img {
+
+  .icon img {
     width: 120px;
     height: 120px;
-    margin: 15px;
   }
 }
 
-@media (max-width: 440px){
-  .images img {
+@media (max-width: 512px){
+  .icon {
+    font-size: 13px;
+    margin: 5px;
+    padding: 5px;
+  }
+
+  .icon img {
     width: 100px;
     height: 100px;
-    margin: 10px;
   }
 }
 
 @media (max-width: 350px){
-  .images img {
+
+  .icon img {
     width: 80px;
     height: 80px;
-    margin: 10px;
   }
 }

@@ -56,7 +56,6 @@ var app = angular.module('doorbell', [])
   $scope.state.inside = false;
 
   var contactInfoExists = function() {
-    console.log($scope.name, $scope.contact);
     return ($scope.name && $scope.contact);
   };
 
