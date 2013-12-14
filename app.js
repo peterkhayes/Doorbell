@@ -13,7 +13,7 @@ app.use(express.bodyParser());
 app.get('/whosthere', routes.whosthere);
 app.post('/twilio', routes.twilio);
 app.post('/ring', routes.ring);
-app.post('/unring', routs.unring);
+app.post('/unring', routes.unring);
 app.post('/leave', routes.leave);
 
 // Start server
