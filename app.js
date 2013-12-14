@@ -145,14 +145,20 @@ app.get('/whosthere', function(req, res) {
 });
 
 app.post('/ring', function(req, res) {
-  // Req.body is an email and a name.
-  console.log(req.body);
-  // If the user provided a name and a contact method...
-  if (req.body && req.body.contact && req.body.name) {
+  var contact;
+  var name;
 
-    var contact = (req.body.contact ? escaper(req.body.contact) : req.body.From.slice(1));
-    var name = (req.body.name ? escaper(req.body.name) : escaper(req.body.Body));
+  // Response from web client.
+  if (req.body.contact && req.body.name) {
+    contact = escaper(req.body.contact);
+    name = escaper(req.body.name);
+  // Response from Twilio.
+  } else if (req.body.From && req.body.Body) {
+    contact = escaper(req.body.From.slice(1)); // Remove initial + sign.
+    name = escaper(req.body.Body); // Body of the text message.
+  }
 
+  if (contact && name) {
     // Send out messages to everyone currently present.
     messageAllUsers({action: 'ring', name: name, except:[contact]});
 
