@@ -57,7 +57,8 @@ var app = angular.module('doorbell', [])
   $scope.state.inside = false;
 
   var contactInfoExists = function() {
-    return $scope.name && $scope.contact;
+    console.log($scope.name, $scope.contact);
+    return ($scope.name && $scope.contact);
   };
 
   // Checks if a given input looks like an email or a phone number.
