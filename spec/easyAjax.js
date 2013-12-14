@@ -10,6 +10,14 @@ var ajax = function(options){
   // Default method and contentType
   options.contentType = options.contentType || 'application/JSON';
   options.method = options.method || 'GET';
+  //Default error callback that will log the error to the console
+  if (options.error === 'default') {
+    options.error = function(response){
+      response.on('error', function(error){
+        console.log('error');
+      });
+    };
+  }
 
   //allowing success and error functionality (unless already has callback)
   options.callback = options.callback || function(response){
@@ -29,4 +37,4 @@ var ajax = function(options){
   request.end();
 };
 
-exports.module = ajax;
+exports = ajax;
