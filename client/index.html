@@ -10,8 +10,8 @@
     <h1>Ding dong.</h1>
     <p>Enter your name and a way to reach you, then ring the bell.</p>
       <!-- name = "email" is to help with autofill -->
-      <input ng-value = "name" type = "text" name = "Firstname" placeholder = "Name"></input>
-      <input ng-value = "contact" ng-enter = "ring()" type = "text" name = "email" placeholder = "Email or Phone Number"></input>
+      <input ng-model = "name" type = "text" name = "Firstname" placeholder = "Name"></input>
+      <input ng-model = "contact" ng-enter = "ring()" type = "text" name = "email" placeholder = "Email or Phone Number"></input>
 
     <div class = "images">
       <div class = "icon" ng-click = "ring()" ng-hide = "state.hasRung">
