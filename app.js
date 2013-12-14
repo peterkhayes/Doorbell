@@ -1,5 +1,6 @@
 var express = require('express');
 var http = require('http');
+var https = require('https');
 var path = require('path');
 var nodemailer = require("nodemailer");
 var escaper = require('jsesc');
@@ -88,12 +89,12 @@ var sendMessage = function(type, action, data) {
     });
 
     var options = {
-      hostname: 'https://api.twilio.com',
+      hostname: 'api.twilio.com',
       path: '/2010-04-01/Accounts/'+process.env.TWILIO_KEY+'/Messages',
       method: 'POST'
     };
 
-    var req = http.request(options, function(res) {
+    var req = https.request(options, function(res) {
       console.log("Sent text message!");
     });
 
