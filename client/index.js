@@ -136,8 +136,8 @@ var app = angular.module('doorbellApp', [])
         ajax.ring(data).then(
           function() {
             getWhosThere();
-            cookie.write('name', $scope.name);
-            cookie.write('contact', $scope.contact);
+            cookies.write('name', $scope.name);
+            cookies.write('contact', $scope.contact);
             $scope.state.hasRung = true;
             $scope.state.inside = false;
             $scope.message = "Rang that bell!  Click cancel once you're inside.";
