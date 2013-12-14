@@ -41,7 +41,7 @@ exports.twilio = function(req, res){
   };
 
   // If both fields provided:
-  if (contact && body) {
+  if (contact && message) {
     if (specialMsgs[message]) {
       var type = specialMsgs[message];
       console.log("Performing", type);
