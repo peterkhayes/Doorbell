@@ -233,7 +233,7 @@ var app = angular.module('doorbellApp', [])
   var updateState = function() {
     var cookieName = cookies.read('name');
     var cookieContact = cookies.read('contact');
-    if ($scope.userList[cookieContact] === cookieName) {
+    if ($scope.userList && $scope.userList[cookieContact] === cookieName) {
       $scope.state.hasRung = true;
     } else {
       $scope.state.hasRung = false;
