@@ -158,7 +158,7 @@ var app = angular.module('doorbell', [])
   // Durned Angular don't got no set-interval.
   var recurringGetWhosThere = function() {
     getWhosThere();
-    $timeout(recurringGetWhosThere, 30000);
+    $timeout(recurringGetWhosThere, 5000);
   };
   recurringGetWhosThere();
 

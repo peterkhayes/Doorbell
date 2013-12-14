@@ -83,12 +83,12 @@ exports.ring = function(contact, name) {
   // Then log in the current user.
   users.login(contact, name);
 };
-exports.unring = function(contact, name) {
+exports.unring = function(contact) {
   contact = escaper(contact.trim());
-  name = escaper(name);
+  users.getUserName(contact);
 
   // Send out messages to everyone currently present.
-  messageAllUsers({action: 'unring', name: name, except: [contact]});
+  if (name) messageAllUsers({action: 'unring', name: name, except: [contact]});
 };
 exports.leave = function(contact) {
   contact = escaper(contact.trim());
