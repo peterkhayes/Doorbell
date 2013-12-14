@@ -34,21 +34,16 @@ setInterval(checkAndWipe, 3600000);
 var temperature;
 // Get the weather outside of Hack Reactor.
 var getTemperature = function() {
-  var url = 'http://api.wunderground.com/api/'+keys.weather+'/conditions/q/CA/San_Francisco.json';
-  http.get(url, function(res){
-    var message = '';
-    res.on('data', function(chunk){
-      message+=chunk;
-    });
-    res.on('end', function(){
-      var data = JSON.parse(message);
-      temperature = data.temp_f;
-      console.log(data.temp_f);
-    })
-  }).on('error', function(err) {
-    console.log("Error getting weather:", err);
+  request('http://api.wunderground.com/api/' + process.env.WUNDERGROUND_KEY + '/conditions/q/CA/San_Francisco.json', function (error, response, body) {
+    if (error) {
+      console.log(error)
+    } else {
+      console.log(body);
+      console.log(response.body);
+    }
   });
 };
+
 // Current temperature outside of Hack Reactor.
 // Periodically update the weather.
 getTemperature();
