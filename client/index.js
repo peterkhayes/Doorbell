@@ -5,15 +5,16 @@ $(document).ready(function(){
     $('.notrung').click();
   });
 
-
-
+  //doorbell object for namespacing
+  //doorbell.data takes care of contact info
   var doorbell = {};
   doorbell.data = {};
+
+  //used to update status messages
   doorbell.$message= $('#message');
 
-
   //     Registering click events      //
-  $('.notrung').on('click', function(){
+  $('.notrung').find('img').on('click', function(){
     if (!doorbell.rung){
       var $form = $('form');
 
@@ -38,14 +39,15 @@ $(document).ready(function(){
   });
 
 
-  $('.rung').on('click', function(){
+  $('.rung').find('img').on('click', function(){
     doorbell.cancel();
   });
 
-  $('.leave').on('click', function(){
+  $('.leave').find('img').on('click', function(){
     doorbell.leave();
   });
 
+  //To reset back to base 
   doorbell.default = function(){
    $('.notrung').removeClass('hide');
    $('.rung').addClass('hide');
@@ -95,15 +97,12 @@ $(document).ready(function(){
 
   doorbell.success = function(){
     var $images = $('.images');
-    $images.find('.icon').toggleClass('hide');
-
-    //Keep this option available so that they can hassle people 
-    //who haven't come to the door
-    $images.find('.whosthere').removeClass('hide');
-
-    //Hide the form
+    $images.find('.notrung').addClass('hide');
+    $images.find('.rung').removeClass('hide');
+    $images.find('.leave').removeClass('hide');
     $('form').addClass('hide');
-    doorbell.$message.text('contact sent, cancel doorbell if you get in');
+
+    doorbell.$message.text('Contact info sent, cancel doorbell if you get in');
   };
 
   doorbell.failure = function(){
@@ -113,9 +112,8 @@ $(document).ready(function(){
   };
 
   doorbell.cancelled = function(){
-    $('div.images').find('.icon').addClass('hide');
-    $('div.images').find('.leave').removeClass('hide');
-    $('form').addClass('hide');
+    var $imgs = $('div.images')
+    $imgs.find('.rung').addClass('hide');
   }
 
   doorbell.cancel = function(){
@@ -150,7 +148,6 @@ $(document).ready(function(){
           }
           message+='<ul>';
           $('#people').html(message);
-
           //checks again a minute in the future
           setTimeout(doorbell.whosthere, 60000);
         }
