@@ -243,6 +243,7 @@ var app = angular.module('doorbellApp', [])
   // Durned Angular don't got no set-interval.
   var interval = function() {
     refreshUserList();
+    updateState();
     $timeout(interval, 5000);
   };
   interval();
