@@ -10,6 +10,7 @@
     "nodemailer": "latest",
     "jsesc": "latest",
     "request": "~2.29.0",
-    "twilio": "latest"
+    "twilio": "latest",
+    "jasmine-node": "~1.11.0"
   }
 }

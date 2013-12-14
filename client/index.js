@@ -162,9 +162,3 @@ $(document).ready(function(){
   //Populates list of peeps
   doorbell.whosthere();
 });
-
-// / - website
-// /ring - post
-// /unring - post
-// /leave - post
-// /whosthere - get
