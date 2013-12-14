@@ -87,7 +87,7 @@ var sendMessage = function(type, action, data) {
     twilio.sendMessage({
 
         to: "+" + data.recipient, // Twilio likes the +.
-        from: '+4157671437', // Twilio number.
+        from: '+14157671437', // Twilio number.
         body: message.subject + ' ' + message.text
 
     }, function(err, data) { // Response from Twilio.
