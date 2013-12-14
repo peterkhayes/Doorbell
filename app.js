@@ -38,7 +38,8 @@ var getTemperature = function() {
     if (error) {
       console.log(error);
     } else {
-      temperature = body.current_observation.feelslike_string;
+      console.log(response.body);
+      temperature = response.body.current_observation.feelslike_string;
     }
   });
 };
