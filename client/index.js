@@ -216,8 +216,8 @@ var app = angular.module('doorbellApp', [])
             ringBell();
           }
         }
-        console.log("Data recieved", data);
         if (data) $scope.userList = data;
+        updateState(); // If the user is logged in, buttons should change
       }
     );
   };
@@ -243,7 +243,6 @@ var app = angular.module('doorbellApp', [])
   // Durned Angular don't got no set-interval.
   var interval = function() {
     refreshUserList();
-    updateState();
     $timeout(interval, 5000);
   };
   interval();
