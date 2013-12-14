@@ -37,4 +37,4 @@ var ajax = function(options){
   request.end();
 };
 
-exports = ajax;
+exports.module = ajax;
