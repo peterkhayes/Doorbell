@@ -65,13 +65,7 @@ exports.help = function(contact) {
   sendMessage('help', {recipient: contact});
 };
 exports.whosthere = function() {
-  var data = [];
-  var userList = users.getUserList();
-  for (var contact in userList) {
-    data.push({contact: contact, name: userList[contact]});
-  }
-  console.log("users here:", data);
-  return data;
+  return users.getUserList();
 };
 exports.ring = function(contact, name) {
   contact = escaper(contact.trim());

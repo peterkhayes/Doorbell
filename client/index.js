@@ -1,4 +1,4 @@
-var app = angular.module('doorbell', [])
+var app = angular.module('doorbellApp', [])
 .directive('ngEnter', function() {
   return function(scope, element, attrs) {
     element.bind("keydown keypress", function(event) {
@@ -10,6 +10,41 @@ var app = angular.module('doorbell', [])
       }
     });
   };
+})
+.factory('doorbell', function() {
+  var service = {};
+
+  var context = window.AudioContext || window.webkitAudioContext; // Webkit shim.
+  var doorbellBuffer;
+  $http({
+    method:'GET',
+    url: '/doorbell.mp3',
+    responseType: "arraybuffer"
+  }).success(function(data) {
+    context.decodeAudioData(request.response,
+      function (buffer) {
+        if (!buffer) {
+          console.log("No doorbell buffer received.");
+          return;
+        }
+        doorbellBuffer = buffer;
+      },
+      function (error) {
+        console.error('decodeAudioData error', error);
+      }
+    );
+  }).error(function(err) {
+    console.log('Could not fetch doorbell sound from server.');
+  });
+
+  service.ring = function() {
+    var source = context.createBufferSource();
+    source.buffer = doorbellBuffer;
+    source.connect(destination);
+    source.noteOn(0);
+  };
+
+  return service;
 })
 .factory('ajax', function($q, $http){
   var service = {};
@@ -49,7 +84,7 @@ var app = angular.module('doorbell', [])
 
   return service;
 })
-.controller('doorbell', function($scope, $timeout, ajax) {
+.controller('doorbell', function($scope, $timeout, ajax, doorbell) {
   // Initialize variables.
   $scope.state = {};
   $scope.state.hasRung = false;
@@ -144,15 +179,31 @@ var app = angular.module('doorbell', [])
     }
   };
 
-  // Who's there timer.
+  // Get a list of present users.
+  // If there has been a change, ring the bell.
   var getWhosThere = function() {
     ajax.whosthere().then(
       function(data) {
-        if (data.length) {
-          $scope.people = data;
+        if ($scope.people) {
+          var change = false;
+          for (var contact in data) {
+            if ($scope.people[contact] !== data[contact]) {
+              change = true;
+            }
+          }
+          if (change) {
+            ringBell();
+          }
         }
+        $scope.people = data;
       }
     );
+  };
+
+  var ringBell = function() {
+    if (!$scope.mute) {
+      doorbell.ring();
+    }
   };
 
   // Durned Angular don't got no set-interval.

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html ng-app = "doorbell">
+<html ng-app = "doorbellApp">
   <head>
     <title>The Door's Bell</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,7 +29,7 @@
     <h3>People Here:</h3>
     <ul>
       <li ng-hide='people'>No one.<br>No one can save you.</li>
-      <li ng-repeat = "person in people">{{person.name}}</li>
+      <li ng-repeat = "(contact, name) in people">{{names}}</li>
     </ul>
   </body>
 </html>
