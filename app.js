@@ -128,8 +128,8 @@ var templates = {
   },
   unring: function(data) {
     return {
-      subject: fields.name + " found their way inside safely.",
-      text: "And it's no thanks to you."
+      subject: "Never mind.",
+      text: data.name + " found his or her way inside safely."
     };
   }
 };
