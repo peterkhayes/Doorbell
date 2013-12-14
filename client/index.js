@@ -162,14 +162,11 @@ var app = angular.module('doorbellApp', [])
         if ($scope.people) {
           var change = false;
           for (var contact in data) {
-            console.log("Checking if", contact, "is already here.");
             if ($scope.people[contact] !== data[contact]) {
               change = true;
-              console.log("nope!");
             }
           }
           if (change) {
-            console.log("Ringing the bell.");
             ringBell();
           }
         }

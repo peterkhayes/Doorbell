@@ -79,7 +79,7 @@ exports.ring = function(contact, name) {
 };
 exports.unring = function(contact) {
   contact = escaper(contact.trim());
-  users.getUserName(contact);
+  var name = users.getUserName(contact);
 
   // Send out messages to everyone currently present.
   if (name) messageAllUsers({action: 'unring', name: name, except: [contact]});
