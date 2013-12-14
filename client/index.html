@@ -17,7 +17,7 @@
       <div class = "icon" ng-click = "ring()" ng-hide = "state.hasRung">
         <img src = "icons/boxalarm.png"><label>Ding Dong</label>
       </div>
-      <div class = "icon" ng-click = "unring()" ng-show = "state.hasRung" ng-hide = "state.inside">
+      <div class = "icon" ng-click = "unring()" ng-show = "state.hasRung && !state.inside">
         <img src = "icons/cancel2.png"><label>Cancel Ring</label>
       </div>
       <div class = "icon" ng-click = "leave()" ng-show = "state.hasRung">
@@ -26,7 +26,7 @@
       <h2>{{message}}</h2>
       <h3>People Here</h3>
       <ul>
-        <li ng-hide='people'>No one can save you.</li>
+        <li ng-hide='people'>No one.<br>No one can save you.</li>
         <li ng-repeat = "person in people">{{person.name}}</li>
       </ul>
     </div>
