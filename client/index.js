@@ -24,13 +24,13 @@ $(document).ready(function(){
 
 
       //contact must satisfy basic regex, and name must be 2 letters or longer
-      var contact = doorbell.checkContactInfo(contact);
+      contact = doorbell.checkContactInfo(contact);
       if (contact && name.length - 1){
         doorbell.data = {contact: contact, name: name};
         doorbell.rung = true;
         doorbell.ring(contact, name);
       } else {
-        console.log('name and contact not ok...')
+        console.log('name and contact not ok...');
         doorbell.$message.text('Knock knock, who\'s there?');
       }
     } else {
@@ -47,7 +47,7 @@ $(document).ready(function(){
     doorbell.leave();
   });
 
-  //To reset back to base 
+  //To reset back to base
   doorbell.default = function(){
    $('.notrung').removeClass('hide');
    $('.rung').addClass('hide');
@@ -81,18 +81,18 @@ $(document).ready(function(){
       error: function(){
         doorbell.failure();
       },
-    })
-  }
+    });
+  };
 
   doorbell.ring = function(contact, name){
     var data = {contact: contact, name: name};
     $.ajax({
-      method: "POST", 
+      method: "POST",
       url: '/ring',
       data: data,
       success: function(){ doorbell.success(); },
       error: function(){ doorbell.failure(); }
-    })
+    });
   };
 
   doorbell.success = function(){
@@ -112,9 +112,9 @@ $(document).ready(function(){
   };
 
   doorbell.cancelled = function(){
-    var $imgs = $('div.images')
+    var $imgs = $('div.images');
     $imgs.find('.rung').addClass('hide');
-  }
+  };
 
   doorbell.cancel = function(){
     $.ajax({
@@ -130,11 +130,11 @@ $(document).ready(function(){
       }
     });
     doorbell.default();
-  }
+  };
 
   doorbell.whosthere = function(){
     $.ajax({
-      method: 'GET', 
+      method: 'GET',
       url:    '/whosthere',
       contentType: 'application/JSON',
       success: function(data){
@@ -142,7 +142,7 @@ $(document).ready(function(){
         if (!data.length){
           $('#people').html("<h3>People Here</h3>NOBODY");
         } else {
-          var message = '<h3>People Here</h3><ul>'
+          var message = '<h3>People Here</h3><ul>';
           for (var i = 0; i < data.length; i++){
             message+='<li>' + data[i] + '</li>';
           }
@@ -152,12 +152,13 @@ $(document).ready(function(){
           setTimeout(doorbell.whosthere, 60000);
         }
       },
-      error: function(){ 
+      error: function(){
         setTimeout(function(){
           doorbell.whosthere();
-      }, 5000)}
+        }, 5000);
+      }
     });
-  }
+  };
 
   //Populates list of peeps
   doorbell.whosthere();
