@@ -93,7 +93,7 @@ exports.leave = function(req, res) {
 
   // If a contact is provided:
   if (contact) {
-    actions.leave(contact, name);
+    actions.leave(contact);
     res.writeHead(200);
     res.end();
   // Otherwise error.
