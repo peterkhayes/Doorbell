@@ -11,7 +11,7 @@ var app = angular.module('doorbellApp', [])
     });
   };
 })
-.factory('doorbell', function() {
+.factory('bell', function($http) {
   var service = {};
 
   var context = window.AudioContext || window.webkitAudioContext; // Webkit shim.
@@ -84,7 +84,7 @@ var app = angular.module('doorbellApp', [])
 
   return service;
 })
-.controller('doorbell', function($scope, $timeout, ajax, doorbell) {
+.controller('doorbell', function($scope, $timeout, ajax, bell) {
   // Initialize variables.
   $scope.state = {};
   $scope.state.hasRung = false;
@@ -202,7 +202,7 @@ var app = angular.module('doorbellApp', [])
 
   var ringBell = function() {
     if (!$scope.mute) {
-      doorbell.ring();
+      bell.ring();
     }
   };
 
