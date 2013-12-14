@@ -125,7 +125,7 @@ var app = angular.module('doorbell', [])
     if (contactInfoExists()) {
       if (checkContactInfo()) {
         var data = {contact: $scope.contact};
-        ajax.unring(data).then(
+        ajax.leave(data).then(
           function() {
             getWhosThere();
             $scope.state.hasRung = false;
