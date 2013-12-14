@@ -44,7 +44,7 @@ exports.twilio = function(req, res){
       var type = specialMsgs[message];
       actions[type](contact, name);
     } else {
-      actions['ring'](contact, name);
+      actions.ring(contact, name);
     }
 
     res.writeHead(200);
@@ -62,7 +62,7 @@ exports.ring = function(req, res) {
 
   // If both fields provided:
   if (contact && name) {
-    ring(contact, name);
+    actions.ring(contact, name);
     res.writeHead(200);
     res.end();
   // Otherwise error.
@@ -73,13 +73,14 @@ exports.ring = function(req, res) {
 };
 
 exports.unring = function(req, res) {
-  // Req.body is an email and a name.
+  var contact = req.body.contact;
+  var name = req.body.name;
 
-  // If the user provided a name and an email...
-  if (req.body && req.body.contact && req.body.name) {
+  // If both fields provided:
+  if (contact && name) {
+    actions.unring(contact, name);
     res.writeHead(200);
     res.end();
-
   // Otherwise error.
   } else {
     res.writeHead(400);
@@ -88,7 +89,16 @@ exports.unring = function(req, res) {
 };
 
 exports.leave = function(req, res) {
-  actions.leave(req.body.contact);
-  res.writeHead(200);
-  res.end();
+  var contact = req.body.contact;
+
+  // If a contact is provided:
+  if (contact) {
+    actions.leave(contact, name);
+    res.writeHead(200);
+    res.end();
+  // Otherwise error.
+  } else {
+    res.writeHead(400);
+    res.end();
+  }
 };
