@@ -218,7 +218,7 @@ var app = angular.module('doorbellApp', [])
     );
   };
 
-  var toggleMute = function() {
+  scope.toggleMute = function() {
     $scope.muted = !$scope.muted;
   };
 
