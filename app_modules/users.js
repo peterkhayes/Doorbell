@@ -21,7 +21,7 @@ exports.login = function(contact, name) {
 
 exports.logout = function(contact) {
   delete usersPresent[contact];
-  console.log("Logged out!  Users:", users);
+  console.log("Logged out!  Users left:", users);
 };
 
 exports.getUserName = function(contact) {

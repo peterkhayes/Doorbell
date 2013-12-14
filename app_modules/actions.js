@@ -64,7 +64,6 @@ var messageAllUsers = function(data) {
 exports.help = function(contact) {
   sendMessage('help', {recipient: contact});
 };
-
 exports.whosthere = function() {
   var data = [];
   var userList = users.getUserList();
@@ -93,5 +92,5 @@ exports.unring = function(contact, name) {
 };
 exports.leave = function(contact) {
   contact = escaper(contact.trim());
-  logout(contact);
+  users.logout(contact);
 };
