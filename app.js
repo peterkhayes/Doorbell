@@ -2,7 +2,6 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var nodemailer = require("nodemailer");
-var keys = require('./keys');
 var escaper = require('jsesc');
 var querystring = require('querystring');
 var request = require('request');
@@ -35,6 +34,7 @@ setInterval(checkAndWipe, 3600000);
 var temperature;
 // Get the weather outside of Hack Reactor.
 var getTemperature = function() {
+<<<<<<< HEAD
   var url = 'http://api.wunderground.com/api/'+keys.weather+'/conditions/q/CA/San_Francisco.json';
   http.get(url, function(res){
     var message = '';
@@ -46,6 +46,12 @@ var getTemperature = function() {
       temperature = data.temp_f;
       console.log(data.temp_f);
     })
+=======
+  var url = 'http://api.wunderground.com/api/'+process.env.WUNDERGROUND_KEY+'/conditions/q/CA/San_Francisco.json';
+  http.get(url, function(res){
+    console.log("weather data:", res.body);
+    temperature = res.body.temp_f;
+>>>>>>> 23f590b677079738bd3584e0054eeeb33ff42d73
   }).on('error', function(err) {
     console.log("Error getting weather:", err);
   });
@@ -59,8 +65,8 @@ setInterval(getTemperature, 1800000);
 var emailSender = nodemailer.createTransport("SMTP",{
     service: "Gmail",
     auth: {
-        user: keys.email.user,
-        pass: keys.email.password
+        user: process.env.GMAIL_USERNAME,
+        pass: process.env.GMAIL_PASSWORD
     }
 });
 
@@ -96,7 +102,7 @@ var sendMessage = function(type, action, data) {
 
     var options = {
       hostname: 'https://api.twilio.com/',
-      path: '/2010-04-01/Accounts/'+keys.twilio+'/Messages',
+      path: '/2010-04-01/Accounts/'+process.env.TWILIO_KEY+'/Messages',
       method: 'POST'
     };
 
