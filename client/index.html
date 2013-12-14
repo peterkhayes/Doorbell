@@ -8,6 +8,8 @@
     <link rel = "stylesheet" href = "style.css" />
   </head>
   <body ng-controller = "doorbell">
+    <img class = 'mute' ng-click = 'toggleMute()' ng-show = 'muted' src = 'img/muted.png'/>
+    <img class = 'mute' ng-click = 'toggleMute()' ng-hide = 'muted' src = 'img/unmuted.png'/>
     <h1>Ding dong.</h1>
     <p>Enter your name and a way to reach you, then ring the bell.</p>
 
@@ -25,10 +27,10 @@
       <img src = "icons/leave.png" ></img><label>Farewell</label>
     </div>
 
-    <h2>{{message}}</h2>
+    <p>{{message}}</p>
     <h3>People Here:</h3>
     <ul>
-      <li ng-hide='userList'>No one.<br>No one can save you.</li>
+      <li ng-hide='userList.keys'>No one.<br>No one can save you.</li>
       <li ng-repeat = "(contact, name) in userList">{{name}}</li>
     </ul>
   </body>

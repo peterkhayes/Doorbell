@@ -13,12 +13,13 @@ body {
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
+  cursor: pointer;
 }
 
 .icon img { 
   display: block;
-  width: 150px;
-  height: 150px;
+  width: 128px;
+  height: 128px;
 }
 
 label {
@@ -47,13 +48,6 @@ ul {
 }
 
 /*    Media Queries      */
-@media (max-width: 800px){
-
-  .icon img {
-    width: 120px;
-    height: 120px;
-  }
-}
 
 @media (max-width: 512px){
   .icon {

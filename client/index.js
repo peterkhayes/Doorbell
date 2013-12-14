@@ -136,10 +136,10 @@ var app = angular.module('doorbellApp', [])
             cookies.write('contact', $scope.contact);
             $scope.state.hasRung = true;
             $scope.state.inside = false;
-            $scope.message = "Rang that bell!  Click cancel once you're inside.";
+            $scope.message = "Rang that bell! Click 'got inside' if you get let in.";
           },
           function(err) {
-            $scope.message = "Error logging in.  Try again.";
+            $scope.message = "Error logging in. Try again.";
           }
         );
       } else {
@@ -159,10 +159,10 @@ var app = angular.module('doorbellApp', [])
             refreshUserList();
             $scope.state.hasRung = true;
             $scope.state.inside = true;
-            $scope.message = "Great!  Thanks for keeping everyone posted.";
+            $scope.message = "Great! Thanks for keeping everyone posted.";
           },
           function(err) {
-            $scope.message = "Error unringing bell.  Try again.";
+            $scope.message = "Error unringing bell. Try again.";
           }
         );
       } else {
@@ -185,7 +185,7 @@ var app = angular.module('doorbellApp', [])
             refreshUserList();
           },
           function(err) {
-            $scope.message = "Error leaving.  Try again, or you'll keep getting messages.";
+            $scope.message = "Error leaving. Try again, or you'll keep getting messages.";
           }
         );
       } else {
@@ -218,8 +218,12 @@ var app = angular.module('doorbellApp', [])
     );
   };
 
+  var toggleMute = function() {
+    $scope.muted = !$scope.muted;
+  };
+
   var ringBell = function() {
-    if (!$scope.mute) {
+    if (!$scope.muted) {
       bell.ring();
     }
   };
@@ -228,7 +232,7 @@ var app = angular.module('doorbellApp', [])
   // we should update the view accordingly.
   var updateState = function() {
     // Initialize variables.
-    $scope.state = {};
+    $scope.state = $scope.state || {};
     var cookieName = cookies.read('name');
     var cookieContact = cookies.read('contact');
     if ($scope.userList && $scope.userList[cookieContact] === cookieName) {
@@ -241,7 +245,7 @@ var app = angular.module('doorbellApp', [])
   // Durned Angular don't got no set-interval.
   var interval = function() {
     refreshUserList();
-    $timeout(interval, 5000);
+    $timeout(interval, 10000);
   };
   interval();
 
