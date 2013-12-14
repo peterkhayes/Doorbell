@@ -36,7 +36,45 @@ describe('requests to /ring', function(){
     }, "needs name and contact info", time);
   });
 
-  it('should update users there when user leaves', function(){
+
+});
+
+describe('leaving request format', function(){
+  it('should require contact info and name to requests to /leave', function(){
+    var test1 = false;
+    runs(function(){
+      //This is testing without any user information, so should fail
+      var request = http.request({hostname: host, path: '/leave', method: "POST", headers: {'Content-Type': 'application/JSON'}}, function(response){
+        if (response.statusCode === 400){
+          test1 = true;
+        }
+      });
+      request.end();
+    });
+    waitsFor(function(){
+      return test1;
+    }, "allowed post to logout without contact info", time);
+
+    test2 = false;
+    runs(function(){
+      //this test is including user information, so should succeed
+      var data = JSON.stringify({name: 'NAME', contact: 'foo@bar.com'});
+      var request = http.request({host: host, path:'/leave', method: "POST", data: data, headers: {'Content-Type': 'application/JSON'}}, function(response){
+        if (response.statusCode === 200){
+          test2 = true;
+        }
+      });
+      request.write(data);
+      request.end();
+    });
+    waitsFor(function(){
+      return test2;
+    }, "needs name and contact info", time);
+  });
+});
+
+describe('whosthere should update', function(){
+it('should update users there when user leaves', function(){
     //Used for multiple tests
     var whosThere = function(){
       console.log('in whosThere function');
@@ -88,39 +126,3 @@ describe('requests to /ring', function(){
     }, "needs name and contact info", time);
   });
 });
-
-describe('leaving request format', function(){
-  it('should require contact info and name to requests to /leave', function(){
-    var test1 = false;
-    runs(function(){
-      //This is testing without any user information, so should fail
-      var request = http.request({hostname: host, path: '/leave', method: "POST", headers: {'Content-Type': 'application/JSON'}}, function(response){
-        if (response.statusCode === 400){
-          test1 = true;
-        }
-      });
-      request.end();
-    });
-    waitsFor(function(){
-      return test1;
-    }, "allowed post to logout without contact info", time);
-
-    test2 = false;
-    runs(function(){
-      //this test is including user information, so should succeed
-      var data = JSON.stringify({name: 'NAME', contact: 'foo@bar.com'});
-      var request = http.request({host: host, path:'/leave', method: "POST", data: data, headers: {'Content-Type': 'application/JSON'}}, function(response){
-        if (response.statusCode === 200){
-          test2 = true;
-        }
-      });
-      request.write(data);
-      request.end();
-    });
-    waitsFor(function(){
-      return test2;
-    }, "needs name and contact info", time);
-  });
-});
-
-describe('')

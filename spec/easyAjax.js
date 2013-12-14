@@ -8,9 +8,17 @@ var ajax = function(options){
   }
   options.contentType = options.contentType || 'application/JSON';
   options.method = options.method || 'GET';
-  if (options.success){
-    options.callback = options.success;
-  }
+  options.callback = function(response){
+    if (options.success && response.statusCode < 400){
+      options.success();
+    }
+    if (options.error && response.statusCode > 399){
+      options.error(response);
+    }
+    if (options.then){
+      options.then();
+    }
+  };
 
   var request = http.request({
     hostname: options.host,
