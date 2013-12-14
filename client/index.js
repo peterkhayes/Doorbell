@@ -82,6 +82,7 @@ var app = angular.module('doorbell', [])
         var data = {name: $scope.name, contact: $scope.contact};
         ajax.ring(data).then(
           function() {
+            getWhosThere();
             $scope.state.hasRung = true;
             $scope.state.inside = false;
             $scope.message = "Rang that bell!  Click cancel once you're inside.";
@@ -104,6 +105,7 @@ var app = angular.module('doorbell', [])
         var data = {name: $scope.name, contact: $scope.contact};
         ajax.unring(data).then(
           function() {
+            getWhosThere();
             $scope.state.hasRung = true;
             $scope.state.inside = true;
             $scope.message = "Great!  Thanks for keeping everyone posted.";
@@ -123,9 +125,10 @@ var app = angular.module('doorbell', [])
   $scope.leave = function() {
     if (contactInfoExists()) {
       if (checkContactInfo()) {
-        var data = {name: $scope.name, contact: $scope.contact};
+        var data = {contact: $scope.contact};
         ajax.unring(data).then(
           function() {
+            getWhosThere();
             $scope.state.hasRung = false;
             $scope.state.inside = false;
             $scope.message = "See you next time!";
@@ -151,9 +154,13 @@ var app = angular.module('doorbell', [])
         }
       }
     );
-    $timeout(getWhosThere, 10000);
   };
 
-  getWhosThere();
+  // Durned Angular don't got no set-interval.
+  var recurringGetWhosThere = function() {
+    getWhosThere();
+    $timeout(recurringGetWhosThere, 10000);
+  };
+  recurringGetWhosThere();
 
 });

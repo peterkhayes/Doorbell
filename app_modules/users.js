@@ -20,7 +20,7 @@ exports.login = function(contact, name) {
 };
 
 exports.logout = function(contact) {
-  delete usersPresent[contact];
+  delete users[contact];
   console.log("Logged out!  Users left:", users);
 };
 
