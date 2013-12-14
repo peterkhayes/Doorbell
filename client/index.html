@@ -1,27 +1,34 @@
 <!DOCTYPE html>
-<html>
+<html ng-app = "doorbell">
   <head>
     <title>The Door's Bell</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
+    <script src = "index.js"></script>
     <link rel = "stylesheet" href = "style.css" />
   </head>
-  <body>
-    <div class = "container">
-      <h1>Ding dong.</h1>
-      <p>Enter your name and a way to reach you, then ring the bell.</p>
-      <form>
-        <!-- name = "email" is to help with autofill -->
-        <input type = "text" name = "email" class = "contact" placeholder = "Email or Phone Number"></input>
-        <input type = "text" name = "Firstname" class = "name" placeholder = "Name"></input>
-      </form>
-      <div class = "images">
-        <div class = "notrung icon"><img src = "icons/boxalarm.png" class = "doorbell"></img><label>Ding Dong</label></div>
-        <div class = "rung icon hide"><img src = "icons/cancel2.png" class = "doorbell"></img><label>Cancel Ring</label></div>
-        <div class = "leave icon hide"><img src = "icons/openDoor.png" ></img><label>Farewell</label></div>
-        <h2 id = "message"></h2>
-        <div id = "people"><h3>People Here</h3></div>
+  <body ng-controller = "doorbell">
+    <h1>Ding dong.</h1>
+    <p>Enter your name and a way to reach you, then ring the bell.</p>
+      <!-- name = "email" is to help with autofill -->
+      <input ng-value = "name" type = "text" name = "Firstname" placeholder = "Name"></input>
+      <input ng-value = "contact" ng-enter = "ring()" type = "text" name = "email" placeholder = "Email or Phone Number"></input>
+
+    <div class = "images">
+      <div class = "icon" ng-click = "ring()" ng-hide = "state.hasRung">
+        <img src = "icons/boxalarm.png"><label>Ding Dong</label>
       </div>
+      <div class = "icon" ng-click = "unring()" ng-show = "state.hasRung" ng-hide = "state.inside">
+        <img src = "icons/cancel2.png"><label>Cancel Ring</label>
+      </div>
+      <div class = "icon" ng-click = "leave()" ng-show = "state.hasRung">
+        <img src = "icons/openDoor.png" ></img><label>Farewell</label>
+      </div>
+      <h2>{{message}}</h2>
+      <h3>People Here</h3>
+      <ul>
+        <li ng-hide='people'>No one can save you.</li>
+        <li ng-repeat = "person in people">{{person.name}}</li>
+      </ul>
     </div>
-    <script src = "http://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src = "index.js"></script>
   </body>
 </html>
