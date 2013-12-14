@@ -9,6 +9,7 @@
     "express": "3.4.3",
     "nodemailer": "latest",
     "jsesc": "latest",
-    "request": "~2.29.0"
+    "request": "~2.29.0",
+    "twilio": "latest"
   }
 }

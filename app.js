@@ -1,10 +1,12 @@
 var express = require('express');
 var http = require('http');
+var https = require('https');
 var path = require('path');
-var nodemailer = require("nodemailer");
+var nodemailer = require('nodemailer');
 var escaper = require('jsesc');
 var querystring = require('querystring');
 var request = require('request');
+var twilio = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 var app = express();
 app.set('port', process.env.PORT || 3000);
@@ -81,29 +83,17 @@ var sendMessage = function(type, action, data) {
   } else if (type === 'text') {
     console.log("Texting",message,"to",data.recipient);
 
-    var params = querystring.stringify({
-      from: '4157671437',
-      to: data.recipient,
-      body: message.subject + ' ' + message.text
+    //Send an SMS text message
+    twilio.sendMessage({
+
+        to: "+" + data.recipient, // Twilio likes the +.
+        from: '+4157671437', // Twilio number.
+        body: message.subject + ' ' + message.text
+
+    }, function(err, data) { // Response from Twilio.
+        if (err) console.log("Message sending error:", err);
     });
 
-    var options = {
-      hostname: 'https://api.twilio.com/',
-      path: '/2010-04-01/Accounts/'+process.env.TWILIO_KEY+'/Messages',
-      method: 'POST'
-    };
-
-    var req = http.request(options, function(res) {
-      console.log("Set text message!");
-    });
-
-    req.on('error', function(e) {
-      console.log('problem with request: ' + e.message);
-    });
-
-    // write data to request body
-    req.write(params);
-    req.end();
   }
 };
 
