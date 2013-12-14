@@ -1,4 +1,4 @@
-var actions = require('actions');
+var actions = require('./actions');
 
 exports.whosthere = function(req, res) {
   data = JSON.stringify(actions.whosthere());
