@@ -123,7 +123,7 @@ var templates = {
   ring: function(data) {
     return {
       subject: data.name + " is at the door!",
-      text: "It's currently " + temperature + " degrees outside."
+      text: "It's currently " + temperature + " outside."
     };
   },
   unring: function(data) {
