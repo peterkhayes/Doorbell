@@ -11,6 +11,46 @@ var app = angular.module('doorbellApp', [])
     });
   };
 })
+.factory('cookies', function() {
+  var service = {};
+
+  // create cookie at document.cookie
+  service.create = function(name, value, days) {
+    var expires;
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime()+(days*24*60*60*1000));
+      expires = "; expires="+date.toGMTString();
+    }
+    else expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+  };
+
+  service.add = service.create;
+
+  service.write = service.create;
+
+  // read property of cookie at document.cookie
+  service.read = function(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  };
+
+  // erase property of cookie at document.cookie
+  service.erase = function(name) {
+    createCookie(name,"",-1);
+  };
+
+  service.remove = service.erase;
+
+  return service;
+})
 .factory('bell', function($http) {
   var service = {};
 
@@ -59,11 +99,15 @@ var app = angular.module('doorbellApp', [])
 
   return service;
 })
-.controller('doorbell', function($scope, $timeout, ajax, bell) {
+.controller('doorbell', function($scope, $timeout, ajax, bell, cookies) {
   // Initialize variables.
   $scope.state = {};
   $scope.state.hasRung = false;
   $scope.state.inside = false;
+
+  // Read properties saved in the cookie.
+  $scope.name = cookie.read(name) || '';
+  $scope.contact = cookie.read(contact) || '';
 
   var contactInfoExists = function() {
     return ($scope.name && $scope.contact);
@@ -92,6 +136,8 @@ var app = angular.module('doorbellApp', [])
         ajax.ring(data).then(
           function() {
             getWhosThere();
+            cookie.write('name', $scope.name);
+            cookie.write('contact', $scope.contact);
             $scope.state.hasRung = true;
             $scope.state.inside = false;
             $scope.message = "Rang that bell!  Click cancel once you're inside.";
