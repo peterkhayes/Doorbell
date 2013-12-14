@@ -91,6 +91,8 @@ exports.unring = function(req, res) {
 exports.leave = function(req, res) {
   var contact = req.body.contact;
 
+  console.log("Got a leave request for", contact);
+
   // If a contact is provided:
   if (contact) {
     actions.leave(contact);
