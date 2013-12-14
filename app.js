@@ -84,7 +84,7 @@ var sendMessage = function(type, action, data) {
 
     var params = querystring.stringify({
       from: '4157671437',
-      to: data.recipient,
+      to: "+" + data.recipient,
       body: message.subject + ' ' + message.text
     });
 
