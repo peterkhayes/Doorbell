@@ -155,12 +155,11 @@ app.post('/ring', function(req, res) {
   // If the user provided a name and a contact method...
   if (req.body && req.body.contact && req.body.name) {
 
-    var contact = escaper(req.body.contact);
-    var name = escaper(req.body.name);
+    var contact = (req.body.contact ? escaper(req.body.contact) : req.body.From.slice(1));
+    var name = (req.body.name ? escaper(req.body.name) : escaper(req.body.Body));
 
     // Send out messages to everyone currently present.
     messageAllUsers({action: 'ring', name: name});
-
 
     // Then log in the current user.
     usersPresent[contact] = name;
@@ -172,11 +171,6 @@ app.post('/ring', function(req, res) {
     res.end();
   }
 
-});
-
-app.post('/twilio', function(req, res) {
-  console.log("Params:", req.params);
-  console.log("Body:", req.body);
 });
 
 app.post('/unring', function(req, res) {
