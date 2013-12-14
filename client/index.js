@@ -202,13 +202,13 @@ var app = angular.module('doorbellApp', [])
 
   // Get a list of present users.
   // If there has been a change, ring the bell.
-  var getWhosThere = function() {
+  var refreshUserList = function() {
     ajax.whosthere().then(
       function(data) {
-        if ($scope.people) {
+        if ($scope.userList) {
           var change = false;
           for (var contact in data) {
-            if ($scope.people[contact] !== data[contact]) {
+            if ($scope.userList[contact] !== data[contact]) {
               change = true;
             }
           }
@@ -217,7 +217,7 @@ var app = angular.module('doorbellApp', [])
           }
         }
         console.log("Data recieved", data);
-        if (data) $scope.people = data;
+        if (data) $scope.userList = data;
       }
     );
   };
@@ -228,11 +228,23 @@ var app = angular.module('doorbellApp', [])
     }
   };
 
-  // Durned Angular don't got no set-interval.
-  var recurringGetWhosThere = function() {
-    getWhosThere();
-    $timeout(recurringGetWhosThere, 5000);
+  // If the info from the cookie is currently logged into the server,
+  // we should update the view accordingly.
+  var updateState = function() {
+    var cookieName = cookies.read('name');
+    var cookieContact = cookies.read('contact');
+    if ($scope.userList[cookieContact] === cookieName) {
+      $scope.state.hasRung = true;
+    } else {
+      $scope.state.hasRung = false;
+    }
   };
-  recurringGetWhosThere();
+
+  // Durned Angular don't got no set-interval.
+  var interval = function() {
+    refreshUserList();
+    $timeout(interval, 5000);
+  };
+  interval();
 
 });
