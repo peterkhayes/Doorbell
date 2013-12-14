@@ -32,26 +32,18 @@ exports.twilio = function(req, res){
     'left': 'leave',
     'bye': 'leave',
     'byebye': 'leave',
-    'leaving': 'leave',
-
-    // Ring messages.
-    'ring': 'ring'
+    'leaving': 'leave'
 
     // A message without one of these words first is considered a 'ring'.
     // The rest of the message is the user's name.
   };
 
-  // If both fields are provided:
+  // If both fields provided:
   if (contact && message) {
-    // The first word of the message might indicate a special action like 'leave'.
-    var messageWords = message.split(" ");
-    var first = messageWords[0];
-    var rest = messageWords.slice(1).join(' ');
-    if (specialMsgs[first]) {
-      var type = specialMsgs[first];
+    if (specialMsgs[message.toLowerCase().trim()]) {
+      var type = specialMsgs[message];
       console.log("Performing", type);
-      actions[type](contact, rest);
-    // But maybe the whole message is just their name.
+      actions[type](contact);
     } else {
       console.log("Ringing");
       actions.ring(contact, message);
