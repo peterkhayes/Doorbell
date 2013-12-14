@@ -1,164 +1,164 @@
-$(document).ready(function(){
-  //form shouldn't have autosubmit
-  $('form').on('submit', function(e){
-    e.preventDefault();
-    $('.notrung').click();
-  });
-
-  //doorbell object for namespacing
-  //doorbell.data takes care of contact info
-  var doorbell = {};
-  doorbell.data = {};
-
-  //used to update status messages
-  doorbell.$message= $('#message');
-
-  //     Registering click events      //
-  $('.notrung').find('img').on('click', function(){
-    if (!doorbell.rung){
-      var $form = $('form');
-
-      //escaping is happening on the server. Come at me bro --Peter Hayes
-      var contact = $form.find('.contact').val();
-      var name  = $form.find('.name').val();
-
-
-      //contact must satisfy basic regex, and name must be 2 letters or longer
-      var contact = doorbell.checkContactInfo(contact);
-      if (contact && name.length - 1){
-        doorbell.data = {contact: contact, name: name};
-        doorbell.rung = true;
-        doorbell.ring(contact, name);
-      } else {
-        console.log('name and contact not ok...')
-        doorbell.$message.text('Knock knock, who\'s there?');
+var app = angular.module('doorbell', [])
+.directive('ngEnter', function() {
+  return function(scope, element, attrs) {
+    element.bind("keydown keypress", function(event) {
+      if(event.which === 13) {
+        scope.$apply(function(){
+          scope.$eval(attrs.ngEnter);
+        });
+        event.preventDefault();
       }
-    } else {
-      doorbell.$message.text('Hold your horses, one click is good');
-    }
-  });
+    });
+  };
+})
+.factory('ajax', function($q, $http){
+  var service = {};
 
+  service.call = function(url, method, data) {
+    var p = $q.defer();
 
-  $('.rung').find('img').on('click', function(){
-    doorbell.cancel();
-  });
+    $http({
+      method: method,
+      url: url,
+      data: data
+    }).success(function(data) {
+      p.resolve(data);
+    }).error(function(err) {
+      p.reject(err);
+    });
 
-  $('.leave').find('img').on('click', function(){
-    doorbell.leave();
-  });
-
-  //To reset back to base 
-  doorbell.default = function(){
-   $('.notrung').removeClass('hide');
-   $('.rung').addClass('hide');
-   $('.whosthere').removeClass('hide');
-   $('.leave').addClass('hide');
-   $('form').removeClass('hide');
-   doorbell.rung = false;
+    return p.promise;
   };
 
+  service.ring = function(data){
+    return service.call('/ring', 'post', data);
+  };
 
-  doorbell.checkContactInfo = function(contact){
+  service.unring = function(data){
+    return service.call('/unring', 'post', data);
+  };
+
+  service.leave = function(data){
+    return service.call('/leave', 'post', data);
+  };
+
+  service.whosthere = function(){
+    var toReturn = service.call('/whosthere', 'get');
+    return toReturn;
+  };
+
+  return service;
+})
+.controller('doorbell', function($scope, $timeout, ajax) {
+  // Initialize variables.
+  $scope.state = {};
+  $scope.state.hasRung = false;
+  $scope.state.inside = false;
+
+  var contactInfoExists = function() {
+    return ($scope.name && $scope.contact);
+  };
+
+  // Checks if a given input looks like an email or a phone number.
+  var checkContactInfo = function(){
+    if ($scope.name.length < 2) return false;
+    var contact = $scope.contact;
     if ( contact && contact.match(/.+\@.+\..+/) ){
-      return contact;
+      return true;
     } else {
-      contact = contact.replace(/[^\d]*/g, '', 'g');
+      $scope.contact = contact.replace(/[^\d]*/g, '', 'g');
       if (contact.length > 9){
-         return contact;
+         return true;
       }
     }
     return false;
   };
 
-  doorbell.leave = function(){
-    $.ajax({
-      method: "POST",
-      url: '/leave',
-      data: doorbell.data,
-      success: function(){
-        doorbell.default();
-      },
-      error: function(){
-        doorbell.failure();
-      },
-    })
-  }
-
-  doorbell.ring = function(contact, name){
-    var data = {contact: contact, name: name};
-    $.ajax({
-      method: "POST", 
-      url: '/ring',
-      data: data,
-      success: function(){ doorbell.success(); },
-      error: function(){ doorbell.failure(); }
-    })
-  };
-
-  doorbell.success = function(){
-    var $images = $('.images');
-    $images.find('.notrung').addClass('hide');
-    $images.find('.rung').removeClass('hide');
-    $images.find('.leave').removeClass('hide');
-    $('form').addClass('hide');
-
-    doorbell.$message.text('Contact info sent, cancel doorbell if you get in');
-  };
-
-  doorbell.failure = function(){
-    doorbell.$message.text('Shoot, something went wrong. Try again in a sec');
-    doorbell.rung = false;
-    doorbell.default();
-  };
-
-  doorbell.cancelled = function(){
-    var $imgs = $('div.images')
-    $imgs.find('.rung').addClass('hide');
-  }
-
-  doorbell.cancel = function(){
-    $.ajax({
-      method: "POST",
-      url: '/unring',
-      data: doorbell.data,
-      success: function(){
-        doorbell.$message.text('You successfully cancelled your ring');
-        doorbell.cancelled();
-      },
-      error: function(){
-        doorbell.failure();
-      }
-    });
-    doorbell.default();
-  }
-
-  doorbell.whosthere = function(){
-    $.ajax({
-      method: 'GET', 
-      url:    '/whosthere',
-      contentType: 'application/JSON',
-      success: function(data){
-        data = JSON.parse(data);
-        if (!data.length){
-          $('#people').html("<h3>People Here</h3>NOBODY");
-        } else {
-          var message = '<h3>People Here</h3><ul>'
-          for (var i = 0; i < data.length; i++){
-            message+='<li>' + data[i] + '</li>';
+  // Button bindings.
+  $scope.ring = function() {
+    if (contactInfoExists()) {
+      if (checkContactInfo()) {
+        var data = {name: $scope.name, contact: $scope.contact};
+        ajax.ring(data).then(
+          function() {
+            getWhosThere();
+            $scope.state.hasRung = true;
+            $scope.state.inside = false;
+            $scope.message = "Rang that bell!  Click cancel once you're inside.";
+          },
+          function(err) {
+            $scope.message = "Error logging in.  Try again.";
           }
-          message+='<ul>';
-          $('#people').html(message);
-          //checks again a minute in the future
-          setTimeout(doorbell.whosthere, 60000);
-        }
-      },
-      error: function(){ 
-        setTimeout(function(){
-          doorbell.whosthere();
-      }, 5000)}
-    });
-  }
+        );
+      } else {
+        $scope.message = "What kind of name and contact is that?";
+      }
+    } else {
+      $scope.message = "Whoa there! Don't try to shirk your responsibilities!";
+    }
+  };
 
-  //Populates list of peeps
-  doorbell.whosthere();
+  $scope.unring = function() {
+    if (contactInfoExists()) {
+      if (checkContactInfo()) {
+        var data = {name: $scope.name, contact: $scope.contact};
+        ajax.unring(data).then(
+          function() {
+            getWhosThere();
+            $scope.state.hasRung = true;
+            $scope.state.inside = true;
+            $scope.message = "Great!  Thanks for keeping everyone posted.";
+          },
+          function(err) {
+            $scope.message = "Error unringing bell.  Try again.";
+          }
+        );
+      } else {
+        $scope.message = "What kind of name and contact is that?";
+      }
+    } else {
+      $scope.message = "We need your name and info to look you up.";
+    }
+  };
+
+  $scope.leave = function() {
+    if (contactInfoExists()) {
+      if (checkContactInfo()) {
+        var data = {contact: $scope.contact};
+        ajax.leave(data).then(
+          function() {
+            $scope.state.hasRung = false;
+            $scope.state.inside = false;
+            $scope.message = "See you next time!";
+            getWhosThere();
+          },
+          function(err) {
+            $scope.message = "Error leaving.  Try again, or you'll keep getting messages.";
+          }
+        );
+      } else {
+        $scope.message = "What kind of name and contact is that?";
+      }
+    } else {
+      $scope.message = "We need your name and info to log you out.";
+    }
+  };
+
+  // Who's there timer.
+  var getWhosThere = function() {
+    ajax.whosthere().then(
+      function(data) {
+        if (data.length) {
+          $scope.people = data;
+        }
+      }
+    );
+  };
+
+  // Durned Angular don't got no set-interval.
+  var recurringGetWhosThere = function() {
+    getWhosThere();
+    $timeout(recurringGetWhosThere, 30000);
+  };
+  recurringGetWhosThere();
 });
