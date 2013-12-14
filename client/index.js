@@ -14,7 +14,7 @@ var app = angular.module('doorbellApp', [])
 .factory('bell', function($http) {
   var service = {};
 
-  var context = window.AudioContext || window.webkitAudioContext; // Webkit shim.
+  var context = new (window.AudioContext || window.webkitAudioContext)(); // Webkit shim.
   var doorbellBuffer;
   $http({
     method:'GET',
