@@ -153,6 +153,11 @@ app.post('/ring', function(req, res) {
     var contact = (req.body.contact ? escaper(req.body.contact) : req.body.From.slice(1));
     var name = (req.body.name ? escaper(req.body.name) : escaper(req.body.Body));
 
+    console.log("Contact:", contact);
+    console.log("Name:", name);
+    console.log("req.body.Body:", req.body.Body);
+    console.log("req.body.From:", req.body.From);
+
     // Send out messages to everyone currently present.
     messageAllUsers({action: 'ring', name: name, except:[contact]});
 
