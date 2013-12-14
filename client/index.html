@@ -13,14 +13,13 @@
       <input type = "text" name = "Firstname" class = "name" placeholder = "Name"></input>
     </form>
     <div class = "images">
-      <img src = "icons/boxalarm.png" class = "doorbell notrung icon"></img>
-      <img src = "icons/cancel2.png" class = "doorbell rung hide icon"></img>
-      <img src = "icons/openDoor.png" class = "leave icon hide"></img>
+      <div class = "notrung icon"><img src = "icons/boxalarm.png" class = "doorbell"></img><label class = "notrung">DingDong</label></div>
+      <div class = "rung icon hide"><img src = "icons/cancel2.png" class = "doorbell"></img><label class = "rung">Cancel Ring</label></div>
+      <div class = "leave icon hide"><img src = "icons/openDoor.png" ></img><label class = "leave">Farewell</label></div>
       <h2 id = "message"></h2>
       <div id = "people"><h3>People Here</h3></div>
     </div>
   </div>
   <script src = "http://code.jquery.com/jquery-1.10.2.min.js"></script>
   <script src = "index.js"></script>  
-
 </body>
