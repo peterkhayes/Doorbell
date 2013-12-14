@@ -15,14 +15,14 @@
     <input ng-model = "name" type = "text" name = "Firstname" placeholder = "Name"></input>
     <input ng-model = "contact" ng-enter = "ring()" type = "text" name = "email" placeholder = "Email or Phone Number"></input>
 
-    <div class = "icon" ng-click = "ring()" ng-hide = "state.hasRung">
-      <img src = "icons/boxalarm.png"><label>Ring Bell</label>
+    <div class = "icon" ng-click = "ring()" ng-hide = "!state || state.hasRung">
+      <img src = "icons/ring.png"><label>Ring Bell</label>
     </div>
-    <div class = "icon" ng-click = "unring()" ng-show = "state.hasRung && !state.inside">
-      <img src = "icons/cancel2.png"><label>Got Inside</label>
+    <div class = "icon" ng-click = "unring()" ng-show = "state && state.hasRung && !state.inside">
+      <img src = "icons/unring.png"><label>Got Inside</label>
     </div>
-    <div class = "icon" ng-click = "leave()" ng-show = "state.hasRung">
-      <img src = "icons/openDoor.png" ></img><label>Farewell</label>
+    <div class = "icon" ng-click = "leave()" ng-show = "state && state.hasRung">
+      <img src = "icons/leave.png" ></img><label>Farewell</label>
     </div>
 
     <h2>{{message}}</h2>

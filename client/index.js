@@ -100,10 +100,6 @@ var app = angular.module('doorbellApp', [])
   return service;
 })
 .controller('doorbell', function($scope, $timeout, ajax, bell, cookies) {
-  // Initialize variables.
-  $scope.state = {};
-  $scope.state.hasRung = false;
-  $scope.state.inside = false;
 
   // Read properties saved in the cookie.
   $scope.name = cookies.read('name') || '';
@@ -231,6 +227,8 @@ var app = angular.module('doorbellApp', [])
   // If the info from the cookie is currently logged into the server,
   // we should update the view accordingly.
   var updateState = function() {
+    // Initialize variables.
+    $scope.state = {};
     var cookieName = cookies.read('name');
     var cookieContact = cookies.read('contact');
     if ($scope.userList && $scope.userList[cookieContact] === cookieName) {
