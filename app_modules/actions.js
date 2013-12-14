@@ -69,7 +69,7 @@ exports.whosthere = function() {
   var data = [];
   var userList = users.getUserList();
   for (var contact in userList) {
-    data.push(userList[contact]);
+    data.push({contact: contact, name: userList[contact]});
   }
   console.log("users here:", data);
   return data;

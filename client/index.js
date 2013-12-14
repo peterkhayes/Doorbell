@@ -44,7 +44,6 @@ var app = angular.module('doorbell', [])
 
   service.whosthere = function(){
     var toReturn = service.call('/whosthere', 'get');
-    console.log(toReturn);
     return toReturn;
   };
 
