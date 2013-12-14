@@ -12,16 +12,16 @@ exports.twilio = function(req, res){
   console.log("Got a message from Twilio.", contact, message);
 
   var specialMsgs = {
-    // Who's there messages
+    // Who's there words
     'who': 'whosthere',
     'whosthere': 'whosthere',
     'present':'whosthere',
 
-    // Unringing messages
+    // Unringing words
     'unring': 'unring',
     'nvm': 'unring',
     'nevermind': 'unring',
-    'never mind': 'unring',
+    'never': 'unring',
     'ok': 'unring',
     'cancel': 'unring',
     'got it': 'unring',
@@ -31,24 +31,30 @@ exports.twilio = function(req, res){
     'exit': 'leave',
     'left': 'leave',
     'bye': 'leave',
-    'bye bye': 'leave',
     'byebye': 'leave',
-    'l8r': 'leave',
-    'leaving': 'leave'
+    'leaving': 'leave',
 
-    // Any other message is considered a 'ring'.
-    // The body of the message should be the user's name.
+    // Ring messages.
+    'ring': 'ring'
+
+    // A message without one of these words first is considered a 'ring'.
+    // The rest of the message is the user's name.
   };
 
-  // If both fields provided:
+  // If both fields are provided:
   if (contact && message) {
-    if (specialMsgs[message]) {
-      var type = specialMsgs[message];
+    // The first word of the message might indicate a special action like 'leave'.
+    var messageWords = message.split(" ");
+    var first = messageWords[0];
+    var rest = messageWords.slice(1).join(' ');
+    if (specialMsgs[first]) {
+      var type = specialMsgs[first];
       console.log("Performing", type);
-      actions[type](contact, name);
+      actions[type](contact, rest);
+    // But maybe the whole message is just their name.
     } else {
       console.log("Ringing");
-      actions.ring(contact, name);
+      actions.ring(contact, message);
     }
 
     res.writeHead(200);
