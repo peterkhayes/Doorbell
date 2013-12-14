@@ -27,7 +27,7 @@ var app = angular.module('doorbell', [])
       p.reject(err);
     });
 
-    return p;
+    return p.promise;
   };
 
   service.ring = function(data){
