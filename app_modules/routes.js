@@ -9,6 +9,8 @@ exports.twilio = function(req, res){
   var contact = req.body.From.slice(1); // Remove initial + sign.
   var message = req.body.Body; // Body of the text message.
 
+  console.log("Got a message from Twilio.", contact, message);
+
   var specialMsgs = {
     // Who's there messages
     'who': 'whosthere',
@@ -42,8 +44,10 @@ exports.twilio = function(req, res){
   if (contact && body) {
     if (specialMsgs[message]) {
       var type = specialMsgs[message];
+      console.log("Performing", type);
       actions[type](contact, name);
     } else {
+      console.log("Ringing");
       actions.ring(contact, name);
     }
 

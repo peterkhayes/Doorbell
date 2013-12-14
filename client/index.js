@@ -127,10 +127,10 @@ var app = angular.module('doorbell', [])
         var data = {contact: $scope.contact};
         ajax.leave(data).then(
           function() {
-            getWhosThere();
             $scope.state.hasRung = false;
             $scope.state.inside = false;
             $scope.message = "See you next time!";
+            getWhosThere();
           },
           function(err) {
             $scope.message = "Error leaving.  Try again, or you'll keep getting messages.";
