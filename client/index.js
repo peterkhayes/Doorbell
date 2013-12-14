@@ -135,7 +135,7 @@ var app = angular.module('doorbellApp', [])
         var data = {name: $scope.name, contact: $scope.contact};
         ajax.ring(data).then(
           function() {
-            getWhosThere();
+            refreshUserList();
             cookies.write('name', $scope.name);
             cookies.write('contact', $scope.contact);
             $scope.state.hasRung = true;
@@ -160,7 +160,7 @@ var app = angular.module('doorbellApp', [])
         var data = {name: $scope.name, contact: $scope.contact};
         ajax.unring(data).then(
           function() {
-            getWhosThere();
+            refreshUserList();
             $scope.state.hasRung = true;
             $scope.state.inside = true;
             $scope.message = "Great!  Thanks for keeping everyone posted.";
@@ -186,7 +186,7 @@ var app = angular.module('doorbellApp', [])
             $scope.state.hasRung = false;
             $scope.state.inside = false;
             $scope.message = "See you next time!";
-            getWhosThere();
+            refreshUserList();
           },
           function(err) {
             $scope.message = "Error leaving.  Try again, or you'll keep getting messages.";
