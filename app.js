@@ -83,9 +83,9 @@ var sendMessage = function(type, action, data) {
     console.log("Texting",message,"to",data.recipient);
 
     var params = querystring.stringify({
-      from: '4157671437',
-      to: "+" + data.recipient,
-      body: message.subject + ' ' + message.text
+      From: '4157671437',
+      To: "+" + data.recipient,
+      Body: message.subject + ' ' + message.text
     });
 
     var options = {
