@@ -195,6 +195,7 @@ var app = angular.module('doorbellApp', [])
             ringBell();
           }
         }
+        console.log("Data recieved", data);
         $scope.people = data;
       }
     );
