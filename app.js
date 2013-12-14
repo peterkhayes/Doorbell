@@ -88,13 +88,13 @@ var sendMessage = function(type, action, data) {
     });
 
     var options = {
-      hostname: 'https://api.twilio.com/',
+      hostname: 'https://api.twilio.com',
       path: '/2010-04-01/Accounts/'+process.env.TWILIO_KEY+'/Messages',
       method: 'POST'
     };
 
     var req = http.request(options, function(res) {
-      console.log("Set text message!");
+      console.log("Sent text message!");
     });
 
     req.on('error', function(e) {
@@ -103,6 +103,8 @@ var sendMessage = function(type, action, data) {
 
     // write data to request body
     req.write(params);
+    console.log("Req:", req);
+
     req.end();
   }
 };
