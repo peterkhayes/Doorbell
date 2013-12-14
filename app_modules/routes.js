@@ -1,0 +1,94 @@
+var actions = require('actions');
+
+exports.whosthere = function(req, res) {
+  data = JSON.stringify(actions.whosthere());
+  res.send(data);
+};
+
+exports.twilio = function(req, res){
+  var contact = req.body.From.slice(1); // Remove initial + sign.
+  var message = req.body.Body; // Body of the text message.
+
+  var specialMsgs = {
+    // Who's there messages
+    'who': 'whosthere',
+    'whosthere': 'whosthere',
+    'present':'whosthere',
+
+    // Unringing messages
+    'unring': 'unring',
+    'nvm': 'unring',
+    'nevermind': 'unring',
+    'never mind': 'unring',
+    'ok': 'unring',
+    'cancel': 'unring',
+    'got it': 'unring',
+
+    // Leaving messages.
+    'leave': 'leave',
+    'exit': 'leave',
+    'left': 'leave',
+    'bye': 'leave',
+    'bye bye': 'leave',
+    'byebye': 'leave',
+    'l8r': 'leave',
+    'leaving': 'leave'
+
+    // Any other message is considered a 'ring'.
+    // The body of the message should be the user's name.
+  };
+
+  // If both fields provided:
+  if (contact && body) {
+    if (specialMsgs[message]) {
+      var type = specialMsgs[message];
+      actions[type](contact, name);
+    } else {
+      actions['ring'](contact, name);
+    }
+
+    res.writeHead(200);
+    res.end();
+  // Otherwise error.
+  } else {
+    res.writeHead(400);
+    res.end();
+  }
+};
+
+exports.ring = function(req, res) {
+  var contact = req.body.contact;
+  var name = req.body.name;
+
+  // If both fields provided:
+  if (contact && name) {
+    ring(contact, name);
+    res.writeHead(200);
+    res.end();
+  // Otherwise error.
+  } else {
+    res.writeHead(400);
+    res.end();
+  }
+};
+
+exports.unring = function(req, res) {
+  // Req.body is an email and a name.
+
+  // If the user provided a name and an email...
+  if (req.body && req.body.contact && req.body.name) {
+    res.writeHead(200);
+    res.end();
+
+  // Otherwise error.
+  } else {
+    res.writeHead(400);
+    res.end();
+  }
+};
+
+exports.leave = function(req, res) {
+  actions.leave(req.body.contact);
+  res.writeHead(200);
+  res.end();
+};
