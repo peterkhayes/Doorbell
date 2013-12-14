@@ -106,8 +106,8 @@ var app = angular.module('doorbellApp', [])
   $scope.state.inside = false;
 
   // Read properties saved in the cookie.
-  $scope.name = cookie.read(name) || '';
-  $scope.contact = cookie.read(contact) || '';
+  $scope.name = cookies.read(name) || '';
+  $scope.contact = cookies.read(contact) || '';
 
   var contactInfoExists = function() {
     return ($scope.name && $scope.contact);
