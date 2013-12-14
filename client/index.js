@@ -14,34 +14,9 @@ var app = angular.module('doorbellApp', [])
 .factory('bell', function($http) {
   var service = {};
 
-  var context = new (window.AudioContext || window.webkitAudioContext)(); // Webkit shim.
-  var doorbellBuffer;
-  $http({
-    method:'GET',
-    url: '/doorbell.mp3',
-    responseType: "arraybuffer"
-  }).success(function(data) {
-    context.decodeAudioData(data,
-      function (buffer) {
-        if (!buffer) {
-          console.log("No doorbell buffer received.");
-          return;
-        }
-        doorbellBuffer = buffer;
-      },
-      function (error) {
-        console.error('decodeAudioData error', error);
-      }
-    );
-  }).error(function(err) {
-    console.log('Could not fetch doorbell sound from server.');
-  });
-
   service.ring = function() {
-    var source = context.createBufferSource();
-    source.buffer = doorbellBuffer;
-    source.connect(context.destination);
-    source.noteOn(0);
+    var sound = new Audio('doorbell.mp3');
+    sound.play();
   };
 
   return service;
