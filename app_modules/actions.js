@@ -53,7 +53,8 @@ var sendMessage = function(action, data) {
 };
 
 var messageAllUsers = function(data) {
-  for (var contact in usersPresent) {
+  var userList = users.getUserList();
+  for (var contact in userList) {
     if (data.except && data.except.indexOf(contact) !== -1) continue;
     var msgData = {name: data.name, recipient: contact};
     sendMessage(data.action, msgData);
@@ -63,10 +64,12 @@ var messageAllUsers = function(data) {
 exports.help = function(contact) {
   sendMessage('help', {recipient: contact});
 };
+
 exports.whosthere = function() {
   var data = [];
-  for (var contact in usersPresent) {
-    data.push(usersPresent[contact]);
+  var userList = users.getUserList();
+  for (var contact in userList) {
+    data.push(userList[contact]);
   }
   console.log("users here:", data);
   return data;
@@ -79,7 +82,7 @@ exports.ring = function(contact, name) {
   messageAllUsers({action: 'ring', name: name, except:[contact]});
 
   // Then log in the current user.
-  usersPresent[contact] = name;
+  users.login(contact, name);
 };
 exports.unring = function(contact, name) {
   contact = escaper(contact.trim());
@@ -90,7 +93,5 @@ exports.unring = function(contact, name) {
 };
 exports.leave = function(contact) {
   contact = escaper(contact.trim());
-
-  delete usersPresent[contact];
-  console.log("users:", usersPresent);
+  logout(contact);
 };
