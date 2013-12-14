@@ -47,6 +47,13 @@ ul {
   margin: 0;
 }
 
+.mute {
+  display: block;
+  position: fixed;
+  top: 1%;
+  right: 1%;
+}
+
 /*    Media Queries      */
 
 @media (max-width: 512px){
