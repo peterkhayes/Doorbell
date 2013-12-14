@@ -21,7 +21,7 @@ var app = angular.module('doorbellApp', [])
     url: '/doorbell.mp3',
     responseType: "arraybuffer"
   }).success(function(data) {
-    context.decodeAudioData(request.response,
+    context.decodeAudioData(data,
       function (buffer) {
         if (!buffer) {
           console.log("No doorbell buffer received.");
