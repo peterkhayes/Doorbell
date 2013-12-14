@@ -38,7 +38,6 @@ var getTemperature = function() {
     if (error) {
       console.log(error);
     } else {
-      console.log(typeof response.body);
       temperature = JSON.parse(response.body).current_observation.feelslike_string;
     }
   });
@@ -110,6 +109,7 @@ var sendMessage = function(type, action, data) {
 
 var messageAllUsers = function(data) {
   for (var userContact in usersPresent) {
+    if (data.except && data.except.indexOf(userContact) !== -1) continue;
     var msgData = {name: data.name, recipient: userContact};
     if (isPhoneNumber(userContact)) {
       sendMessage('text', data.action, msgData);
@@ -154,7 +154,7 @@ app.post('/ring', function(req, res) {
     var name = (req.body.name ? escaper(req.body.name) : escaper(req.body.Body));
 
     // Send out messages to everyone currently present.
-    messageAllUsers({action: 'ring', name: name});
+    messageAllUsers({action: 'ring', name: name, except:[contact]});
 
     // Then log in the current user.
     usersPresent[contact] = name;
@@ -178,7 +178,7 @@ app.post('/unring', function(req, res) {
     var name = escaper(req.body.name);
 
     // Send out messages to everyone currently present.
-    messageAllUsers({action: 'ring', name: name});
+    messageAllUsers({action: 'unring', name: name, except: [contact]});
 
     res.writeHead(200);
     res.end();
