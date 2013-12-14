@@ -5,6 +5,7 @@ var nodemailer = require("nodemailer");
 var keys = require('./keys');
 var escaper = require('jsesc');
 var querystring = require('querystring');
+var request = require('request');
 
 var app = express();
 app.set('port', process.env.PORT || 3000);
@@ -35,9 +36,16 @@ var temperature;
 // Get the weather outside of Hack Reactor.
 var getTemperature = function() {
   var url = 'http://api.wunderground.com/api/'+keys.weather+'/conditions/q/CA/San_Francisco.json';
-  http.get(url, function(data){
-    console.log("weather data:", data);
-    temperature = data.temp_f;
+  http.get(url, function(res){
+    var message = '';
+    res.on('data', function(chunk){
+      message+=chunk;
+    });
+    res.on('end', function(){
+      var data = JSON.parse(message);
+      temperature = data.temp_f;
+      console.log(data.temp_f);
+    })
   }).on('error', function(err) {
     console.log("Error getting weather:", err);
   });
@@ -145,7 +153,7 @@ app.get('/whosthere', function(req, res) {
 app.post('/ring', function(req, res) {
   // Req.body is an email and a name.
   console.log(req.body);
-  // If the user provided a name and an email...
+  // If the user provided a name and a contact method...
   if (req.body && req.body.contact && req.body.name) {
 
     var contact = escaper(req.body.contact);

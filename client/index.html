@@ -6,10 +6,11 @@
 <body>
   <div class = "container">
     <h1>Ding dong.</h1>
-    <p>Enter name and a way to reach you, then ring the bell.</p>
+    <p>Enter your name and a way to reach you, then ring the bell.</p>
     <form>
-      <input type = "text" class = "contact" placeholder = "Email or Phone Number"></input>
-      <input type = "text" class = "name" placeholder = "Name"></input>
+      <!-- name = "email" is to help with autofill -->
+      <input type = "text" name = "email" class = "contact" placeholder = "Email or Phone Number"></input>
+      <input type = "text" name = "Firstname" class = "name" placeholder = "Name"></input>
     </form>
     <div class = "images">
       <img src = "icons/boxalarm.png" class = "doorbell notrung icon"></img>

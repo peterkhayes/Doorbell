@@ -51,6 +51,7 @@ $(document).ready(function(){
    $('.rung').addClass('hide');
    $('.whosthere').removeClass('hide');
    $('.leave').addClass('hide');
+   $('form').removeClass('hide');
    doorbell.rung = false;
   };
 
@@ -111,14 +112,20 @@ $(document).ready(function(){
     doorbell.default();
   };
 
+  doorbell.cancelled = function(){
+    $('div.images').find('.icon').addClass('hide');
+    $('div.images').find('.leave').removeClass('hide');
+    $('form').addClass('hide');
+  }
+
   doorbell.cancel = function(){
     $.ajax({
       method: "POST",
       url: '/unring',
       data: doorbell.data,
       success: function(){
-        doorbell.$message.text('You successfully canceled your ring');
-        doorbell.success();
+        doorbell.$message.text('You successfully cancelled your ring');
+        doorbell.cancelled();
       },
       error: function(){
         doorbell.failure();

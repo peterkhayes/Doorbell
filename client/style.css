@@ -17,6 +17,10 @@
   display: none;
 }
 
+.hide {
+  display: none;
+}
+
 .icon {
   cursor: pointer;
 }
@@ -38,38 +42,45 @@ h1 {
   text-align: center;
 }
 
+ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+}
+
 p {
   text-align: center;
 }
 
 @media (max-width: 800px){
   .images .icon {
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     margin: 15px;
   }
 }
 
 @media (max-width: 440px){
   .images .icon {
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
     margin: 10px;
   }
 }
 
-/*@media (max-width: 410px){
+@media (max-width: 350px){
   .images .icon {
     width: 80px;
     height: 80px;
     margin: 10px;
   }
-}*/
+}
 
-@media (max-width: 370px){
+/*@media (max-width: 370px){
   .images .icon {
     width: 60px;
     height: 60px;
     margin: 8px;
   }
 }
+*/
