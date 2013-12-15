@@ -107,6 +107,7 @@ var app = angular.module('doorbellApp', [])
   $scope.name = cookies.read('name') || '';
   $scope.contact = cookies.read('contact') || '';
   $scope.muted = (cookies.read('muted') === 'true' ? true : false);
+  $scope.sundayOnly = (cookies.read('sundayOnly') === 'true' ? true : false);
 
   var contactInfoExists = function() {
     return ($scope.name && $scope.contact);
@@ -226,9 +227,17 @@ var app = angular.module('doorbellApp', [])
     cookies.add('muted', $scope.muted.toString());
   };
 
+  $scope.toggleDays = function() {
+    $scope.sundayOnly = !$scope.sundayOnly;
+    cookies.add('sundayOnly', $scope.sundayOnly.toString());
+  };
+
   var ringBell = function() {
     if (!$scope.muted) {
-      bell.ring();
+      // Ring if it's Sunday, or if sundayOnly is not checked...
+      if (new Date().getDay === 0 || !$scope.sundayOnly) {
+        bell.ring();
+      }
     }
   };
 
