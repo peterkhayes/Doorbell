@@ -38,28 +38,46 @@ describe('requests to /ring', function(){
 });
 
 describe('leaving request format', function(){
-  it('shouldn\'t require contact info and name to requests to /leave (COOKIES)', function(){
+  it('shouldn\'t be able to leave without contact', function(){
     var test1 = false;
     runs(function(){
-      //This is testing without any user information, so should fail
-      ajax({method: "GET", data: undefined, success: function(){
-        test1 = true;
-      }, error: function(){
+      var data;
+      ajax({method: "POST", host: host, url: '/leave', data: data, success: function(){
         test1 = false;
-      }, host: host, url: '/leave'});
+      }, error: function(){
+        test1 = true;
+      }
     });
     waitsFor(function(){
       return test1;
-    }, "rejected because of lack of data", time);
+    });
   });
 });
 
-describe('whosthere should update', function(){
-  var thereBeforeLogin, thereAfterLogin, thereAfterLogout;
+  it('should be able to leave with contact info', function(){
+    var test2 = false;
+    runs(function(){
+      var data = JSON.stringify({name: 'NAME', contact: 'foo@bar.com'});
+      ajax({method: "POST", host: host, url: '/leave', data: data, success: function(){
+        test2 = true;
+      }, error: function(e){
+        test2 = false;
+      }
+    });
+    });
+    waitsFor(function(){
+      return test2;
+    }, "contact info fail", time);
+  });
+});
 
+describe('whosthere', function(){
+  var numbers = {};
+  console.log('about to run who\'s there');
   //whosthere is lowercase for consistency with server code
   var whosthere = function(variable){
-    var request = http.request({hostname: host, path: '/whosthere', method: "GET"}, function(response){
+    var request = http.request({hostname: host, path: '/whosthere', method: "GET", headers: {'Content-Type': 'application/JSON'} }, function(response){
+      console.log('within whosthere');
       var peeps = '';
       var numPeeps = 0;
 
@@ -69,59 +87,68 @@ describe('whosthere should update', function(){
 
       response.on('end', function(){
         peeps = JSON.parse(peeps);
+        console.log(peeps);
         for (var key in peeps){
           numPeeps++;
         }
-        console.log(numPeeps);
-        variable = numPeeps;
+        numbers[variable] = numPeeps;
+        console.log(variable, numPeeps);
       });
+
       response.on('error', function(){
-        console.log(error);
+        console.log(":( error!");
       });
     });
-
     request.end();
   };
 
   it('should get list of users (shouldn\'t need login)', function(){
-    var test1 = false;
     runs(function(){
-      var request = http.request({hostname: host, data: undefined, path: '/ring', method: "POST", headers: {'Content-Type': 'application/JSON'}}, function(response){
-        whosthere(thereBeforeLogin);
-        test1 = true;
-      });
-      request.end();
+      whosthere('thereBeforeLogin');
     });
+
     waitsFor(function(){
-      return (typeof thereBeforeLogin === "number");
-    }, "didn't get response from server", time);
+      return (typeof numbers.thereBeforeLogin === "number");
+    }, "didn't get list from server", time);
   });
 
   it('should update list of users after login request', function(){
-    test2 = false;
     runs(function(){
       var data = JSON.stringify({name: 'NAME', contact: 'foo@bar.com'});
-      ajax({host: host, url: '/ring', data: data, success: function(){
-        whosthere(thereAfterLogin);
+      ajax({host: host, path: '/ring', data: data, method: "POST",
+        success: function(){
+          console.log('successfully rang');
+          console.log(numbers['thereBeforeLogin'], ' are there before login');
+          whosthere('thereAfterLogin');
+      }, error: function(){
+          console.log('something went wrong');
       }});
     });
+
     waitsFor(function(){
-      return (thereAfterLogin === thereBeforeLogin + 1);
-    }, "List of people present didn't update" , time);
+      return (numbers.thereAfterLogin === (numbers.thereBeforeLogin + 1));
+    }, "login didn't update the list. :(", time);
   });
 
-  // it('should update list of users after login', function(){
-  //   test3 = false;
+  // it('should update list of users after logout request', function(){
   //   runs(function(){
-  //     ajax({host:host, url: '/leave', success: function(){
-  //       thereAfterLogout = whosthere();
-  //       if (thereAfterLogout < thereAfterLogin){
-  //         test3 = true;
-  //       }
+  //     var data = JSON.stringify({name: 'NAME', contact: 'foo@bar.com'});
+  //     ajax({host: host, path: '/leave', data: data, method: "POST",
+  //       success: function(){
+  //         console.log('successfully logged out');
+  //         whosthere('thereAfterLogout');
+  //     }, error: function(){
+  //       console.log('something went wrong');
   //     }});
   //   });
+
   //   waitsFor(function(){
-  //     return test3;
-  //   });
+  //     return (numbers.thereAfterLogin === numbers.thereAfterLogout + 1);
+  //   }, "logout didn't update the list. Oh noes! :(", time);
   // });
+  // setTimeout(function(){
+  //   for (var stuff in numbers){
+  //     console.log(stuff, numbers[stuff]);
+  //   }
+  // }, 10000);
 });
