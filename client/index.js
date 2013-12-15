@@ -235,7 +235,7 @@ var app = angular.module('doorbellApp', [])
   var ringBell = function() {
     if (!$scope.muted) {
       // Ring if it's Sunday, or if sundayOnly is not checked...
-      if (new Date().getDay === 0 || !$scope.sundayOnly) {
+      if (new Date().getDay === 6 || !$scope.sundayOnly) {
         bell.ring();
       }
     }
