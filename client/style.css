@@ -1,7 +1,7 @@
 body {
   font-family: 'futura' helvetica sans-serif;
   text-align: center;
-  padding: 0 10%;
+  padding: 0 10% 50px;
 }
 
 .icon {
@@ -13,12 +13,13 @@ body {
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
+  cursor: pointer;
 }
 
 .icon img { 
   display: block;
-  width: 150px;
-  height: 150px;
+  width: 128px;
+  height: 128px;
 }
 
 label {
@@ -46,14 +47,21 @@ ul {
   margin: 0;
 }
 
-/*    Media Queries      */
-@media (max-width: 800px){
-
-  .icon img {
-    width: 120px;
-    height: 120px;
-  }
+li {
+  margin: 10px 0;
 }
+
+.corner-icons {
+  position: fixed;
+  top: 1%;
+  right: 1%;
+}
+
+.whos-here-heading {
+  margin-bottom: 0;
+}
+
+/*    Media Queries      */
 
 @media (max-width: 512px){
   .icon {

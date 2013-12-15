@@ -1,4 +1,4 @@
-var app = angular.module('doorbell', [])
+var app = angular.module('doorbellApp', [])
 .directive('ngEnter', function() {
   return function(scope, element, attrs) {
     element.bind("keydown keypress", function(event) {
@@ -10,6 +10,58 @@ var app = angular.module('doorbell', [])
       }
     });
   };
+})
+.factory('cookies', function() {
+  var service = {};
+
+  // create cookie at document.cookie
+  service.create = function(name, value, days) {
+    var expires;
+    if (days) {
+      var date = new Date();
+      date.setTime(date.getTime()+(days*24*60*60*1000));
+      expires = "; expires="+date.toGMTString();
+    }
+    else expires = "";
+    document.cookie = name+"="+value+expires+"; path=/";
+  };
+
+  service.add = service.create;
+
+  service.write = service.create;
+
+  service.set = service.create;
+
+  // read property of cookie at document.cookie
+  service.read = function(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i=0;i < ca.length;i++) {
+      var c = ca[i];
+      while (c.charAt(0)==' ') c = c.substring(1,c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  };
+
+  // erase property of cookie at document.cookie
+  service.erase = function(name) {
+    createCookie(name,"",-1);
+  };
+
+  service.remove = service.erase;
+
+  return service;
+})
+.factory('bell', function($http) {
+  var service = {};
+
+  service.ring = function() {
+    var sound = new Audio('doorbell.mp3');
+    sound.play();
+  };
+
+  return service;
 })
 .factory('ajax', function($q, $http){
   var service = {};
@@ -49,11 +101,13 @@ var app = angular.module('doorbell', [])
 
   return service;
 })
-.controller('doorbell', function($scope, $timeout, ajax) {
-  // Initialize variables.
-  $scope.state = {};
-  $scope.state.hasRung = false;
-  $scope.state.inside = false;
+.controller('doorbell', function($scope, $timeout, $window, ajax, bell, cookies) {
+
+  // Read properties saved in the cookie.
+  $scope.name = cookies.read('name') || '';
+  $scope.contact = cookies.read('contact') || '';
+  $scope.muted = (cookies.read('muted') === 'true' ? true : false);
+  $scope.sundayOnly = (cookies.read('sundayOnly') === 'true' ? true : false);
 
   var contactInfoExists = function() {
     return ($scope.name && $scope.contact);
@@ -81,13 +135,15 @@ var app = angular.module('doorbell', [])
         var data = {name: $scope.name, contact: $scope.contact};
         ajax.ring(data).then(
           function() {
-            getWhosThere();
+            refreshUserList();
+            cookies.write('name', $scope.name);
+            cookies.write('contact', $scope.contact);
             $scope.state.hasRung = true;
             $scope.state.inside = false;
-            $scope.message = "Rang that bell!  Click cancel once you're inside.";
+            $scope.message = "Rang that bell! Click 'got inside' if you get let in.";
           },
           function(err) {
-            $scope.message = "Error logging in.  Try again.";
+            $scope.message = "Error logging in. Try again.";
           }
         );
       } else {
@@ -104,13 +160,13 @@ var app = angular.module('doorbell', [])
         var data = {name: $scope.name, contact: $scope.contact};
         ajax.unring(data).then(
           function() {
-            getWhosThere();
+            refreshUserList();
             $scope.state.hasRung = true;
             $scope.state.inside = true;
-            $scope.message = "Great!  Thanks for keeping everyone posted.";
+            $scope.message = "Great! Thanks for keeping everyone posted.";
           },
           function(err) {
-            $scope.message = "Error unringing bell.  Try again.";
+            $scope.message = "Error unringing bell. Try again.";
           }
         );
       } else {
@@ -130,10 +186,10 @@ var app = angular.module('doorbell', [])
             $scope.state.hasRung = false;
             $scope.state.inside = false;
             $scope.message = "See you next time!";
-            getWhosThere();
+            refreshUserList();
           },
           function(err) {
-            $scope.message = "Error leaving.  Try again, or you'll keep getting messages.";
+            $scope.message = "Error leaving. Try again, or you'll keep getting messages.";
           }
         );
       } else {
@@ -144,21 +200,73 @@ var app = angular.module('doorbell', [])
     }
   };
 
-  // Who's there timer.
-  var getWhosThere = function() {
+  // Get a list of present users.
+  // If there has been a change, ring the bell.
+  var refreshUserList = function() {
     ajax.whosthere().then(
       function(data) {
-        if (data.length) {
-          $scope.people = data;
+        if ($scope.userList) {
+          var change = false;
+          for (var contact in data) {
+            if ($scope.userList[contact] !== data[contact]) {
+              change = true;
+            }
+          }
+          if (change) {
+            ringBell();
+          }
         }
+        if (data) $scope.userList = data;
+        updateState(); // If the user is logged in, buttons should change
       }
     );
   };
 
-  // Durned Angular don't got no set-interval.
-  var recurringGetWhosThere = function() {
-    getWhosThere();
-    $timeout(recurringGetWhosThere, 5000);
+  $scope.toggleMute = function() {
+    $scope.muted = !$scope.muted;
+    cookies.add('muted', $scope.muted.toString());
   };
-  recurringGetWhosThere();
+
+  $scope.toggleDays = function() {
+    $scope.sundayOnly = !$scope.sundayOnly;
+    cookies.add('sundayOnly', $scope.sundayOnly.toString());
+  };
+
+  $scope.messageUser = function(contact) {
+    if ((/^\d+$/).test(contact)) {
+      $window.location.href = ("tel:+" + contact);
+    } else {
+      $window.location.href = ("mailto:" + contact);
+    }
+  };
+
+  var ringBell = function() {
+    if (!$scope.muted) {
+      // Ring if it's Sunday, or if sundayOnly is not checked...
+      if (new Date().getDay === 0 || !$scope.sundayOnly) {
+        bell.ring();
+      }
+    }
+  };
+
+  // If the info from the cookie is currently logged into the server,
+  // we should update the view accordingly.
+  var updateState = function() {
+    // Initialize variables.
+    $scope.state = $scope.state || {};
+    var cookieName = cookies.read('name');
+    var cookieContact = cookies.read('contact');
+    if ($scope.userList && $scope.userList[cookieContact] === cookieName) {
+      $scope.state.hasRung = true;
+    } else {
+      $scope.state.hasRung = false;
+    }
+  };
+
+  // Durned Angular don't got no set-interval.
+  var interval = function() {
+    refreshUserList();
+    $timeout(interval, 10000);
+  };
+  interval();
 });
