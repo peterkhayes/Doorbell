@@ -73,34 +73,57 @@ describe('leaving request format', function(){
 
 describe('whosthere', function(){
   var numbers = {};
-  console.log('about to run who\'s there');
   //whosthere is lowercase for consistency with server code
   var whosthere = function(variable){
-    var request = http.request({hostname: host, path: '/whosthere', method: "GET", headers: {'Content-Type': 'application/JSON'} }, function(response){
-      console.log('within whosthere');
-      var peeps = '';
-      var numPeeps = 0;
-
-      response.on('data', function(chunk){
-        peeps += chunk;
-      });
-
-      response.on('end', function(){
-        peeps = JSON.parse(peeps);
-        console.log(peeps);
-        for (var key in peeps){
-          numPeeps++;
-        }
-        numbers[variable] = numPeeps;
-        console.log(variable, numPeeps);
-      });
-
-      response.on('error', function(){
-        console.log(":( error!");
-      });
+    console.log("whosthere");
+    ajax({
+      method: "GET",
+      host: host,
+      path: '/whosthere',
+      success: function(response){
+        console.log('who\'s there request was awesome');
+        var peeps = '';
+        numPeeps = 0;
+        response.on('data', function(chunk){
+          peeps += chunk;
+        });
+        response.on('end', function(){
+          peeps = JSON.parse(peeps);
+          console.log(peeps);
+          for (var key in peeps){
+            numPeeps++;
+          }
+          numbers[variable] = numPeeps;
+        });
+      },
+      error: function(){
+        console.log("oh noes!");
+        console.log('error');
+      }
     });
-    request.end();
   };
+    // console.log('pre-request ', variable);
+    // var request = http.request({hostname: host, path: '/whosthere', method: "GET", headers: {'Content-Type': 'application/JSON'}}, function(response){
+    //   console.log('within whosthere');
+    //   var peeps = '';
+    //   var numPeeps = 0;
+
+    //   response.on('data', function(chunk){
+    //     peeps += chunk;
+    //   });
+
+    //   response.on('end', function(){
+    //     peeps = JSON.parse(peeps);
+    //     console.log(peeps);
+    //     for (var key in peeps){
+    //       numPeeps++;
+    //     }
+    //     numbers[variable] = numPeeps;
+    //     console.log(variable, numPeeps);
+    //   });
+    // });
+    // request.end();
+  // };
 
   it('should get list of users (shouldn\'t need login)', function(){
     runs(function(){
@@ -115,19 +138,25 @@ describe('whosthere', function(){
   it('should update list of users after login request', function(){
     runs(function(){
       var data = JSON.stringify({name: 'NAME', contact: 'foo@bar.com'});
-      ajax({host: host, path: '/ring', data: data, method: "POST",
+      ajax({host: host, path: '/ring', data: data, contentType: 'application/JSON', method: "POST",
         success: function(){
-          console.log('successfully rang');
-          console.log(numbers['thereBeforeLogin'], ' are there before login');
-          whosthere('thereAfterLogin');
+          // console.log(numbers['thereBeforeLogin'], ' are there before login');
+          // numbers.thereAfterLogin = 1;
+          whosthere('afterLogin');
       }, error: function(){
           console.log('something went wrong');
       }});
     });
 
     waitsFor(function(){
-      return (numbers.thereAfterLogin === (numbers.thereBeforeLogin + 1));
+      return (typeof numbers.afterLogin === "number");
     }, "login didn't update the list. :(", time);
+
+    setTimeout(function(){
+      for (var key in numbers){
+        console.log(key, numbers[key]);
+      }
+    }, 5000);
   });
 
   // it('should update list of users after logout request', function(){

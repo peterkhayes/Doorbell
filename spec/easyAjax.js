@@ -20,11 +20,11 @@ var ajax = function(options){
     };
   }
 
-  //allowing success and error functionality (unless already has callback)
+  //Allowing success and error functionality (unless already has callback)
   options.callback = options.callback || function(response){
-    if (options.success && response.statusCode < 400) options.success(arguments);
-    if (options.error && response.statusCode > 399) options.error(arguments);
-    if (options.then) options.then(arguments);
+    if (options.success && response.statusCode < 400) options.success(response);
+    if (options.error && response.statusCode > 399) options.error(response);
+    if (options.then) options.then(response);
   };
 
   //Making the request
