@@ -30,6 +30,8 @@ var app = angular.module('doorbellApp', [])
 
   service.write = service.create;
 
+  service.set = service.create;
+
   // read property of cookie at document.cookie
   service.read = function(name) {
     var nameEQ = name + "=";
@@ -104,6 +106,7 @@ var app = angular.module('doorbellApp', [])
   // Read properties saved in the cookie.
   $scope.name = cookies.read('name') || '';
   $scope.contact = cookies.read('contact') || '';
+  $scope.muted = (cookies.read('muted') === 'true' ? true : false);
 
   var contactInfoExists = function() {
     return ($scope.name && $scope.contact);
@@ -220,6 +223,7 @@ var app = angular.module('doorbellApp', [])
 
   $scope.toggleMute = function() {
     $scope.muted = !$scope.muted;
+    cookies.add('muted', $scope.muted.toString());
   };
 
   var ringBell = function() {
