@@ -232,8 +232,7 @@ var app = angular.module('doorbellApp', [])
     cookies.add('sundayOnly', $scope.sundayOnly.toString());
   };
 
-  $scope.message = function(contact) {
-    console.log(contact);
+  $scope.messageUser = function(contact) {
     if ((/^\d+$/).test(contact)) {
       $window.location.href = ("tel:+" + contact);
     } else {
