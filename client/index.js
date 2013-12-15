@@ -286,5 +286,4 @@ var app = angular.module('doorbellApp', [])
     $timeout(interval, 10000);
   };
   interval();
-
 });
