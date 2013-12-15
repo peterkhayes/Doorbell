@@ -101,7 +101,7 @@ var app = angular.module('doorbellApp', [])
 
   return service;
 })
-.controller('doorbell', function($scope, $timeout, ajax, bell, cookies) {
+.controller('doorbell', function($scope, $timeout, $window, ajax, bell, cookies) {
 
   // Read properties saved in the cookie.
   $scope.name = cookies.read('name') || '';
@@ -230,6 +230,14 @@ var app = angular.module('doorbellApp', [])
   $scope.toggleDays = function() {
     $scope.sundayOnly = !$scope.sundayOnly;
     cookies.add('sundayOnly', $scope.sundayOnly.toString());
+  };
+
+  $scope.message = function(contact) {
+    if ((/^\d+$/).test(contact)) {
+      $window.location.href("tel:+" + contact);
+    } else {
+      $window.location.href("mailto:" + contact);
+    }
   };
 
   var ringBell = function() {
