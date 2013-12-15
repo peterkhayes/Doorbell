@@ -260,7 +260,7 @@ var app = angular.module('doorbellApp', [])
   var ringBell = function() {
     if (!$scope.muted) {
       // Ring if it's during hours, or mode is not 'after hours only'
-      if (!($scope.afterHoursOnly && isAfterHours())) {
+      if (!isAfterHours() || ($scope.afterHoursOnly && isAfterHours())) {
         bell.ring();
       }
     }
