@@ -47,10 +47,18 @@ ul {
   margin: 0;
 }
 
+li {
+  margin: 10px 0;
+}
+
 .corner-icons {
   position: fixed;
   top: 1%;
   right: 1%;
+}
+
+.whos-here-heading {
+  margin-bottom: 0;
 }
 
 /*    Media Queries      */
