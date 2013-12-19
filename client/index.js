@@ -107,7 +107,7 @@ var app = angular.module('doorbellApp', [])
   $scope.name = cookies.read('name') || '';
   $scope.contact = cookies.read('contact') || '';
   $scope.muted = (cookies.read('muted') === 'true' ? true : false);
-  $scope.sundayOnly = (cookies.read('sundayOnly') === 'true' ? true : false);
+  $scope.afterHoursOnly = (cookies.read('afterHoursOnly') === 'true' ? true : false);
 
   var contactInfoExists = function() {
     return ($scope.name && $scope.contact);
@@ -227,9 +227,9 @@ var app = angular.module('doorbellApp', [])
     cookies.add('muted', $scope.muted.toString());
   };
 
-  $scope.toggleDays = function() {
-    $scope.sundayOnly = !$scope.sundayOnly;
-    cookies.add('sundayOnly', $scope.sundayOnly.toString());
+  $scope.toggleAfterHours = function() {
+    $scope.afterHoursOnly = !$scope.afterHoursOnly;
+    cookies.add('afterHoursOnly', $scope.afterHoursOnly.toString());
   };
 
   $scope.messageUser = function(contact) {
@@ -240,10 +240,27 @@ var app = angular.module('doorbellApp', [])
     }
   };
 
+  var isAfterHours = function() {
+    var day = new Date().getDay();
+    var hour = new Date().getHours();
+    if (day === 0) { // Sunday
+      return true;
+    } else if (day === 6) { // Saturdy
+      if (hour < 9 || hour > 18) {
+        return true;
+      }
+    } else {
+      if (hour < 9 || hour > 21) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   var ringBell = function() {
     if (!$scope.muted) {
-      // Ring if it's Sunday, or if sundayOnly is not checked...
-      if (new Date().getDay === 0 || !$scope.sundayOnly) {
+      // Ring if it's during hours, or mode is not 'after hours only'
+      if (!isAfterHours() || ($scope.afterHoursOnly && isAfterHours())) {
         bell.ring();
       }
     }
