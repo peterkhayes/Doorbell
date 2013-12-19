@@ -1,7 +1,29 @@
+/*
+HackReactor.com theme (as of Dec 18 2013)
+=========================================
+light grey = #f7f9fa
+dark grey = #262626
+bold light blue = #45a8f1
+bold blue = #0298f5
+
+title font = Merriweather
+body font = Source Sans Pro
+*/
+
+@import url(http://fonts.googleapis.com/css?family=Merriweather);
+@import url(http://fonts.googleapis.com/css?family=Source+Sans+Pro);
+
 body {
-  font-family: 'futura' helvetica sans-serif;
+  font-family: 'Source Sans Pro', helvetica, sans-serif;
+  font-size: 16px;
   text-align: center;
   padding: 0 10% 50px;
+  background-color: black;
+  color: white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', helvetica, sans-serif;
 }
 
 .icon {
@@ -16,7 +38,7 @@ body {
   cursor: pointer;
 }
 
-.icon img { 
+.icon img {
   display: block;
   width: 128px;
   height: 128px;
@@ -32,13 +54,21 @@ label {
   display: none;
 }
 
+.corner-icons *:hover {
+  cursor: pointer;
+}
+
 input {
   display: block;
   width: 100%;
-  margin: 15px auto;
-  font-size: 16px;
-  padding: 5px;
+  margin: 0.7em auto;
+  font-size: 1.2em;
+  padding: 0.5em 0;
   text-align: center;
+  color: white;
+  background-color: #0298f5;
+  border-radius: 2px;
+  border: 0;
 }
 
 ul {
