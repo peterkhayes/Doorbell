@@ -71,6 +71,21 @@ input {
   border: 0;
 }
 
+/* reference source:
+http://stackoverflow.com/questions/2610497/change-an-inputs-html5-placeholder-color-with-css*/
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #DDD;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #DDD;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #DDD;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #DDD;
+}
+
 ul {
   list-style-type: none;
   padding: 0;
