@@ -8,12 +8,12 @@
     <link rel = "stylesheet" href = "style.css" />
   </head>
   <body ng-controller = "doorbell">
-    <div class='corner-icons'>
-      <img ng-click = 'toggleMute()' ng-show = 'muted' src = 'icons/muted.png'/>
-      <img ng-click = 'toggleMute()' ng-hide = 'muted' src = 'icons/unmuted.png'/>
+    <div class="corner-icons">
+      <div class="mute-button" ng-click = "toggleMute()" ng-show = "muted"></div>
+      <div class="unmute-button" ng-click = "toggleMute()" ng-hide = "muted"></div>
 
-      <img ng-click = 'toggleDays()' ng-show = 'sundayOnly' src = 'icons/sunday.png'/>
-      <img ng-click = 'toggleDays()' ng-hide = 'sundayOnly' src = 'icons/alldays.png'/>
+      <div class="day-button" ng-click = "toggleDays()" ng-show = "sundayOnly">Sunday</div>
+      <div class="day-button" ng-click = "toggleDays()" ng-hide = "sundayOnly">All Days</div>
     </div>
     <h1>Ding dong.</h1>
     <p>Enter your name and a way to reach you, then ring the bell.</p>
@@ -23,19 +23,22 @@
     <input ng-model = "contact" ng-enter = "ring()" type = "text" name = "email" placeholder = "Email or Phone Number"></input>
 
     <div class = "icon" ng-click = "ring()" ng-hide = "!state || state.hasRung">
-      <img src = "icons/ring.png"><label>Ring Bell</label>
+      <img src = "icons/bell.png">
+      Ring Doorbell
     </div>
     <div class = "icon" ng-click = "unring()" ng-show = "state && state.hasRung && !state.inside">
-      <img src = "icons/unring.png"><label>Got Inside</label>
+      <img src = "icons/close.png">
+      Got Inside
     </div>
     <div class = "icon" ng-click = "leave()" ng-show = "state && state.hasRung">
-      <img src = "icons/leave.png" ></img><label>Farewell</label>
+      <img src = "icons/exit.png" ></img>
+      Farewell
     </div>
 
     <p>{{message}}</p>
-    <h3 class = 'whos-here-heading'>Who's Here:</h3>
+    <h3 class = "whos-here-heading">Who's Here:</h3>
     <ul>
-      <li ng-repeat = "(contact, name) in userList" ng-click = 'messageUser(contact)'>{{name}}</li>
+      <li ng-repeat = "(contact, name) in userList" ng-click = "messageUser(contact)">{{name}}</li>
     </ul>
   </body>
 </html>

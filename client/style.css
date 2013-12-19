@@ -28,20 +28,24 @@ h1, h2, h3, h4, h5, h6 {
 
 .icon {
   display: inline-block;
-  background-color: #FAFAFA;
-  border: 1px solid #F0F0F0;
+  /*background-color: #FAFAFA;*/
+  /*border: 1px solid #F0F0F0;*/
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
   padding: 10px;
   margin: 10px;
   cursor: pointer;
+  background-color: #0298f5;
+  text-align: center;
+  width: 75px;
 }
 
 .icon img {
   display: block;
-  width: 128px;
-  height: 128px;
+  margin: auto;
+  width: 32px;
+  height: 32px;
 }
 
 label {
@@ -54,8 +58,25 @@ label {
   display: none;
 }
 
-.corner-icons *:hover {
-  cursor: pointer;
+.mute-button, .unmute-button, .day-button {
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  padding: 0.5em;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #0298f5;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+}
+
+.mute-button {
+  background-image: url('icons/volume-mute.png');
+}
+
+.unmute-button {
+  background-image: url('icons/volume-medium.png');
 }
 
 input {
@@ -102,13 +123,17 @@ li {
   right: 1%;
 }
 
+.corner-icons *:hover {
+  cursor: pointer;
+}
+
 .whos-here-heading {
   margin-bottom: 0;
 }
 
 /*    Media Queries      */
 
-@media (max-width: 512px){
+/*@media (max-width: 512px){
   .icon {
     font-size: 13px;
     margin: 5px;
@@ -127,4 +152,4 @@ li {
     width: 80px;
     height: 80px;
   }
-}
+}*/
