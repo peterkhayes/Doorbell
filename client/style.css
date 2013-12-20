@@ -66,28 +66,26 @@ input {
   font-size: 1.2em;
   padding: 0.5em 0;
   text-align: center;
-  color: white;
-  background-color: #262626;
-  border: 1px solid #0298f5;
+  background-color: #f7f9fa;
+  border: 2px solid #0298f5;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 2px;
-  border: 0;
 }
 
 /* reference source:
 http://stackoverflow.com/questions/2610497/change-an-inputs-html5-placeholder-color-with-css*/
 ::-webkit-input-placeholder { /* WebKit browsers */
-    color: #DDD;
+    color: #777;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color: #DDD;
+    color: #777;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color: #DDD;
+    color: #777;
 }
 :-ms-input-placeholder { /* Internet Explorer 10+ */
-    color: #DDD;
+    color: #777;
 }
 
 ul {
