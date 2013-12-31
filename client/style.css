@@ -18,27 +18,28 @@ body {
   font-size: 16px;
   text-align: center;
   padding: 0 10% 50px;
-  background-color: black;
-  color: white;
+  background-color: #f7f9fa;
 }
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Merriweather', helvetica, sans-serif;
 }
 
+.instructions {
+  padding: 0.1em;
+}
+
 .icon {
   display: inline-block;
-  /*background-color: #FAFAFA;*/
-  /*border: 1px solid #F0F0F0;*/
+  width: 75px;
+  padding: 0.7em;
+  margin: 0.7em;
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
-  padding: 0.7em;
-  margin: 0.7em;
-  cursor: pointer;
   background-color: #0298f5;
-  text-align: center;
-  width: 75px;
+  color: white;
+  cursor: pointer;
 }
 
 .icon img {
@@ -65,25 +66,26 @@ input {
   font-size: 1.2em;
   padding: 0.5em 0;
   text-align: center;
-  color: white;
-  background-color: #0298f5;
+  background-color: #f7f9fa;
+  border: 2px solid #0298f5;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
   border-radius: 2px;
-  border: 0;
 }
 
 /* reference source:
 http://stackoverflow.com/questions/2610497/change-an-inputs-html5-placeholder-color-with-css*/
 ::-webkit-input-placeholder { /* WebKit browsers */
-    color: #DDD;
+    color: #777;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color: #DDD;
+    color: #777;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color: #DDD;
+    color: #777;
 }
 :-ms-input-placeholder { /* Internet Explorer 10+ */
-    color: #DDD;
+    color: #777;
 }
 
 ul {
@@ -98,8 +100,8 @@ li {
 
 .mute-button, .unmute-button, .day-button {
   display: block;
-  width: 2.7em;
-  height: 2.7em;
+  width: 3em;
+  height: 3em;
   margin-bottom: 0.5em;
   background-repeat: no-repeat;
   background-position: center;
@@ -107,6 +109,7 @@ li {
   -moz-border-radius: 5px;
   -webkit-border-radius: 5px;
   border-radius: 5px;
+  color: white;
 }
 
 .mute-button {
