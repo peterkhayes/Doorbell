@@ -234,7 +234,7 @@ var app = angular.module('doorbellApp', [])
 
   $scope.messageUser = function(contact) {
     if ((/^\d+$/).test(contact)) {
-      $window.location.href = ("tel:+" + contact);
+      $window.location.href = ("tel:+1" + contact);
     } else {
       $window.location.href = ("mailto:" + contact);
     }
